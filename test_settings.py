@@ -17,6 +17,8 @@ def root(*args):
     return join(abspath(dirname(__file__)), *args)
 
 
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
