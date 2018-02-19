@@ -16,6 +16,7 @@ configparser==3.5.0       # via pydocstyle, pylint
 diff-cover==1.0.2
 distlib==0.2.6            # via caniusepython3
 django==1.11.10
+djangorestframework==3.7.7
 edx-i18n-tools==0.4.3
 edx-lint==0.5.5
 enum34==1.1.6             # via astroid

@@ -5,8 +5,9 @@ URLs for fonzie.
 from __future__ import absolute_import, unicode_literals
 
 from django.conf.urls import url
-from django.views.generic import TemplateView
+
+from ..views.status import VersionView
 
 urlpatterns = [
-    url(r'', TemplateView.as_view(template_name="fonzie/base.html")),
+    url(r'^version$', VersionView.as_view(), name='version'),
 ]
