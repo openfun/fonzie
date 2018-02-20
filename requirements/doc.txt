@@ -9,7 +9,7 @@ babel==2.5.3              # via sphinx
 bleach==2.1.2             # via readme-renderer
 certifi==2018.1.18        # via requests
 chardet==3.0.4            # via doc8, requests
-django==1.11.10
+django==2.0.2
 djangorestframework==3.7.7
 doc8==0.8.0
 docutils==0.14            # via doc8, readme-renderer, restructuredtext-lint, sphinx
@@ -32,6 +32,5 @@ snowballstemmer==1.2.1    # via sphinx
 sphinx==1.7.0
 sphinxcontrib-websupport==1.0.1  # via sphinx
 stevedore==1.28.0         # via doc8
-typing==3.6.4             # via sphinx
 urllib3==1.22             # via requests
 webencodings==0.5.1       # via html5lib
