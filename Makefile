@@ -55,6 +55,7 @@ quality: ## check coding style with pycodestyle and pylint
 requirements: ## install development environment requirements
 	pip install -qr requirements/dev.txt --exists-action w
 	pip-sync requirements/dev.txt requirements/private.* requirements/test.txt
+	yarn install
 
 test: clean ## run tests in the current virtualenv
 	py.test
@@ -64,7 +65,11 @@ diff_cover: test
 
 test-all: ## run tests on every supported Python/Django combination
 	tox -e quality
+	tox -e spec
 	tox
+
+test-spec:
+	yarn dredd
 
 validate: quality test ## run tests and quality checks
 

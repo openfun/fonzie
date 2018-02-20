@@ -2,7 +2,7 @@ dry-run: null
 hookfiles: null
 language: python
 sandbox: false
-server: venv/bin/python ./manage.py runserver
+server: python ./manage.py runserver
 server-wait: 3
 init: false
 custom: {}
