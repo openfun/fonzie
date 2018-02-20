@@ -2,16 +2,20 @@
 """
 Fonzie, Open edX API
 
-Status urls.
+Open API schema urls.
 """
 from __future__ import absolute_import, unicode_literals
 
 from django.conf.urls import url
 
 from ..apps import FonzieConfig
-from ..views.status import VersionView
+from ..views.schema import FonzieSchemaView
 
 app_name = FonzieConfig.name
 urlpatterns = [
-    url(r'^version$', VersionView.as_view(), name='version'),
+    url(
+        r'^$',
+        FonzieSchemaView.as_view(title="Fonzie, an Open edX CRUD API"),
+        name='schema'
+    ),
 ]

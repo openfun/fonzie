@@ -30,5 +30,5 @@ hooks-worker-term-retry: 500
 hooks-worker-handler-host: 127.0.0.1
 hooks-worker-handler-port: 61321
 config: ./dredd.yml
-blueprint: openedx.apib
-endpoint: 'http://127.0.0.1:8000'
+blueprint: fonzie-v1-0.apib
+endpoint: 'http://127.0.0.1:8000/v1.0'

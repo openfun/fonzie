@@ -1,8 +1,9 @@
+# -*- coding: utf-8 -*-
 """
 Fonzie, Open edX API
 
-Endpoint: /status
-Purpose: views related to the API status
+Base endpoint: /status
+Purpose: get more info about running API
 """
 from __future__ import absolute_import, unicode_literals
 
@@ -13,14 +14,12 @@ from fonzie import __version__ as fonzie_version
 
 
 class VersionView(APIView):
-    """API version
-
-    Endpoint: /version
-    Purpose: get the running release
+    """
+    API endpoint to get running API version
     """
 
     # pylint: disable=redefined-builtin
-    def get(self, request, format=None):
-        """API version is read-only"""
+    def get(self, request, version, format=None):
+        """Retrieve API version (SemVer string)"""
 
         return Response({'version': fonzie_version})
