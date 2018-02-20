@@ -17,7 +17,7 @@ def root(*args):
     return join(abspath(dirname(__file__)), *args)
 
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['testserver', 'localhost', '127.0.0.1']
 
 DATABASES = {
     'default': {
