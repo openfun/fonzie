@@ -68,7 +68,7 @@ test-all: ## run tests on every supported Python/Django combination
 	tox -e spec
 	tox
 
-test-spec:
+test-spec: # run tests on API specification (API blueprint)
 	yarn dredd
 
 validate: quality test ## run tests and quality checks

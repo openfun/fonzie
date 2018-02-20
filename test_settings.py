@@ -43,3 +43,10 @@ LOCALE_PATHS = [
 ROOT_URLCONF = 'fonzie.urls'
 
 SECRET_KEY = 'insecure-secret-key'
+
+# Django Rest Framework (aka DRF)
+REST_FRAMEWORK = {
+    'ALLOWED_VERSIONS': ('1.0', ),
+    'DEFAULT_VERSION': '1.0',
+    'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.URLPathVersioning',
+}

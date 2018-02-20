@@ -19,11 +19,11 @@ class VersionViewTestCase(APITestCase):
     def setUp(self):
         """Set view url"""
 
-        self.url = reverse('status:version')
+        self.url = reverse('status:version', kwargs={'version': '1.0'})
 
     def test_get(self):
         """HTTP/GET returns API version"""
-
+        print(self.url)
         response = self.client.get(self.url, format='json')
         assert response.status_code == status.HTTP_200_OK
         assert response.json() == {'version': fonzie_version}
