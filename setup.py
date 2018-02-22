@@ -37,7 +37,7 @@ CHANGELOG = open(os.path.join(os.path.dirname(__file__), 'CHANGELOG.rst')).read(
 setup(
     name='fonzie',
     version=VERSION,
-    description="""edX CRUD API""",
+    description="""An Open API for Open edX""",
     long_description=README + '\n\n' + CHANGELOG,
     author='FUN',
     author_email='julien.maupetit@fun-mooc.fr',

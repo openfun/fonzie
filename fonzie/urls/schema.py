@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Fonzie, Open edX API
-
-Open API schema urls.
+Open/Core API schema endpoint
 """
 from __future__ import absolute_import, unicode_literals
 
@@ -15,7 +13,7 @@ app_name = FonzieConfig.name
 urlpatterns = [
     url(
         r'^$',
-        FonzieSchemaView.as_view(title="Fonzie, an Open edX CRUD API"),
+        FonzieSchemaView.as_view(title="Fonzie, an Open API for Open edX"),
         name='schema'
     ),
 ]

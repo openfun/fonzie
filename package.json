@@ -1,7 +1,7 @@
 {
   "name": "fonzie",
   "version": "0.1.0",
-  "description": "Open edX CRUD API",
+  "description": "An Open API for Open edX",
   "main": "''",
   "repository": "''",
   "author": "julien.maupetit@fun-mooc.fr",
