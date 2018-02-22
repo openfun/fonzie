@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Fonzie, Open edX API
-
-Open API schema urls.
+Open/Core API schema endpoint
 """
 from __future__ import absolute_import, unicode_literals
 

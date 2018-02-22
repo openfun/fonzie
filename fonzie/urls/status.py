@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Fonzie, Open edX API
-
-Status urls.
+API status endpoints
 """
 from __future__ import absolute_import, unicode_literals
 
