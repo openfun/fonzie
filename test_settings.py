@@ -16,15 +16,29 @@ def root(*args):
     """
     return join(abspath(dirname(__file__)), *args)
 
+DEBUG = True
+
+ALLOWED_HOSTS = ['testserver', 'localhost', '127.0.0.1']
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': 'default.db',
+#         'USER': '',
+#         'PASSWORD': '',
+#         'HOST': '',
+#         'PORT': '',
+#     }
+# }
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'default.db',
-        'USER': '',
-        'PASSWORD': '',
-        'HOST': '',
-        'PORT': '',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'fun_cms',
+        'USER': 'fun',
+        'PASSWORD': 'pass',
+        'HOST': 'localhost',
+        'PORT': '5440',
     }
 }
 
@@ -41,3 +55,10 @@ LOCALE_PATHS = [
 ROOT_URLCONF = 'fonzie.urls'
 
 SECRET_KEY = 'insecure-secret-key'
+
+# Django Rest Framework (aka DRF)
+REST_FRAMEWORK = {
+    'ALLOWED_VERSIONS': ('1.0', ),
+    'DEFAULT_VERSION': '1.0',
+    'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.URLPathVersioning',
+}

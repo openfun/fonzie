@@ -1,0 +1,9 @@
+# Django
+DJANGO_SETTINGS_MODULE=openedx.settings
+DJANGO_SECRET_KEY=ThisIsAnExampleKeyForDevPurposeOnly
+
+# Database
+POSTGRES_HOST=db
+POSTGRES_DB=fun_cms
+POSTGRES_USER=fun
+POSTGRES_PASSWORD=pass

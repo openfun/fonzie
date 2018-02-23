@@ -30,6 +30,7 @@ pip-log.txt
 .cache/
 .coverage
 .coverage.*
+.pytest_cache/
 .tox
 coverage.xml
 htmlcov/
@@ -77,3 +78,7 @@ tests/__init__.py
 
 # Development task artifacts
 default.db
+
+# Node.js
+node_modules
+yarn-error.log

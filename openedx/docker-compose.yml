@@ -1,0 +1,16 @@
+version: "3"
+services:
+  db:
+    image: postgres:9.6
+    env_file: env.d/development
+    ports:
+        - "5440:5432"
+  app:
+    build: .
+    env_file: env.d/development
+    ports:
+        - "8070:8000"
+    volumes:
+      - .:/app
+    depends_on:
+      - "db"
