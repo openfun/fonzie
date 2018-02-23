@@ -16,17 +16,29 @@ def root(*args):
     """
     return join(abspath(dirname(__file__)), *args)
 
+DEBUG = True
 
 ALLOWED_HOSTS = ['testserver', 'localhost', '127.0.0.1']
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': 'default.db',
+#         'USER': '',
+#         'PASSWORD': '',
+#         'HOST': '',
+#         'PORT': '',
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'default.db',
-        'USER': '',
-        'PASSWORD': '',
-        'HOST': '',
-        'PORT': '',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'fun_cms',
+        'USER': 'fun',
+        'PASSWORD': 'pass',
+        'HOST': 'localhost',
+        'PORT': '5440',
     }
 }
 
