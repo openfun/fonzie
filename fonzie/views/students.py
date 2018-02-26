@@ -1,10 +1,10 @@
 from rest_framework.generics import ListAPIView
 
-from openedx.student.models import Student
-from ..serializers import StudentSerializer
+from ..models import UserProfile
+from ..serializers import UserProfileSerializer
 
 
 class StudentListAPIView(ListAPIView):
 
-    queryset = Student.objects.all()
-    serializer_class = StudentSerializer
+    queryset = UserProfile.objects.all()
+    serializer_class = UserProfileSerializer

@@ -3,3 +3,7 @@
 Django                    # Web application framework
 djangorestframework       # CRUD API framework
 drf_openapi               # Open API schema generation
+
+mysqlclient
+
+-e  git+http://github.com/edx/edx-platform.git@open-release/ginkgo.1#egg=openedx

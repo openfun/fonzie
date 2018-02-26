@@ -33,12 +33,12 @@ ALLOWED_HOSTS = ['testserver', 'localhost', '127.0.0.1']
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'fun_cms',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'edxapp',
         'USER': 'fun',
-        'PASSWORD': 'pass',
-        'HOST': 'localhost',
-        'PORT': '5440',
+        'PASSWORD': 'password',
+        'HOST': '127.0.0.1',
+        'PORT': '3316',
     }
 }
 

@@ -1,10 +1,11 @@
 from rest_framework.serializers import ModelSerializer
 
-from openedx.student.models import Student
+from .models import UserProfile
 
 
-class StudentSerializer(ModelSerializer):
+class UserProfileSerializer(ModelSerializer):
 
     class Meta:
-        model = Student
-        fields = '__all__'
+        model = UserProfile
+        fields = ('user', 'name')
+        depth = 2
