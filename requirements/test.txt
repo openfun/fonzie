@@ -14,6 +14,7 @@ coverage==4.5.1           # via pytest-cov
 django-rest-swagger==2.1.2  # via drf-openapi
 djangorestframework==3.7.7
 drf-openapi==1.3.0
+funcsigs==1.0.2           # via pytest
 idna==2.6                 # via requests
 itypes==1.1.0             # via coreapi
 jinja2==2.10              # via coreschema
