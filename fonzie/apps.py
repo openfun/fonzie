@@ -9,8 +9,6 @@ from django.apps import AppConfig
 
 
 class FonzieConfig(AppConfig):
-    """
-    Configuration for the fonzie Django application.
-    """
+    """Configuration for the fonzie Django application."""
 
     name = 'fonzie'

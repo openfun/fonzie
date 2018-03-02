@@ -5,7 +5,7 @@
 
 fonzie
 ======
-An Open API for Open edX
+An FUN API for Open edX
 
 Contents:
 

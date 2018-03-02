@@ -1,5 +1,5 @@
 """
-Fonzie, an Open API for Open edX.
+Fonzie, A FUN API for Open edX.
 """
 
 from __future__ import absolute_import, unicode_literals

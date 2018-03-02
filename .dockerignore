@@ -1,0 +1,7 @@
+.coverage
+.coveragerc
+.git
+.tox
+.tx
+node_modules
+venv

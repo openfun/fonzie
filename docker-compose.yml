@@ -1,0 +1,71 @@
+version: "3.2"
+
+services:
+
+  mysql:
+    image: mysql:5.6
+    env_file: env.d/dev
+    command: mysqld --character-set-server=utf8 --collation-server=utf8_general_ci
+
+  mongodb:
+    image: mongo:3.2
+    # We use WiredTiger in all environments. In development environments we use small files
+    # to conserve disk space, and disable the journal for a minor performance gain.
+    # See https://docs.mongodb.com/v3.0/reference/program/mongod/#options for complete details.
+    command: mongod --smallfiles --nojournal --storageEngine wiredTiger
+
+  memcached:
+    image: memcached:1.4
+
+  rabbitmq:
+    image: rabbitmq:3.6
+
+  lms:
+    build: .
+    image: edxapp-fonzie
+    environment:
+      SERVICE_VARIANT: lms
+      DJANGO_SETTINGS_MODULE: lms.envs.docker_run
+    ports:
+      - "8072:8000"
+    volumes:
+      - ./edx-platform/config/docker_run_lms.py:/config/docker_run_lms.py
+      - ./edx-platform/lms/urls.py:/app/edx-platform/lms/urls.py
+      - .:/app/fonzie
+    tmpfs:
+      - /data/static/lms
+      - /data/media
+      - /data/logs
+    command: >
+      dockerize -wait tcp://mysql:3306 -timeout 60s python manage.py lms runserver 0.0.0.0:8000
+    depends_on:
+      - mysql
+      - mongodb
+      - memcached
+      - rabbitmq
+
+  cms:
+    image: edxapp-fonzie
+    environment:
+      SERVICE_VARIANT: cms
+      DJANGO_SETTINGS_MODULE: cms.envs.docker_run
+    ports:
+      - "8082:8000"
+    command: >
+      dockerize -wait tcp://mysql:3306 -timeout 60s python manage.py cms runserver 0.0.0.0:8000
+    depends_on:
+      - lms
+
+  fonzie:
+    image: edxapp-fonzie
+    volumes:
+      - .:/app/fonzie
+    working_dir: /app/fonzie
+
+  node:
+    image: node:9
+    working_dir: /app/fonzie
+    volumes:
+      - .:/app/fonzie
+    depends_on:
+      - lms

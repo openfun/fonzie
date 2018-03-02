@@ -1,0 +1,170 @@
+#!/usr/bin/env bash
+
+source "$(dirname "${BASH_SOURCE[0]}")/config.sh"
+
+
+function usage() {
+    declare script_name="$0"
+
+    echo "$script_name [-h|--help] CMD"
+    echo
+    echo "Options:"
+    echo "  -h|--help      : Display this help message"
+    echo
+    echo "Commands:"
+    echo "  after-success  : After success step (coverage report)"
+    echo "  before-install : Pre-installation step (install docker-compose)"
+    echo "  install        : Install project dependencies (build containers)"
+    echo "  script         : Test script (tox environments & dredd)"
+    echo
+}
+
+
+# install_compose: install a docker-compose release with sudo (TravisCI job
+# only)
+#
+# usage: install_compose [RELEASE]
+#
+# RELEASE : docker-compose release to install
+function install_compose() {
+    DOCKER_COMPOSE_VERSION=${1-1.18.0}
+
+    echo "Installing docker-compose (v$DOCKER_COMPOSE_VERSION) ..."
+
+    sudo rm /usr/local/bin/docker-compose
+    curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
+    chmod +x docker-compose
+    sudo mv docker-compose /usr/local/bin
+}
+
+
+# install_dpendencies: build lms & fonzie containers, fetch node dependencies
+#
+# usage: install_dependencies
+#
+# nota bene: we do not set a custom user/group ID to run the node container,
+# doing so leads to permission issues in the Travis context.
+function install_dependencies() {
+    echo "Building fonzie containers..."
+
+    _dc_build lms
+    _dc_build fonzie
+    FONZIE_UNSET_USER=1 _dc_run --no-deps node yarn install --no-progress
+}
+
+
+# run_test_suite: run the test suite
+#
+# usage: run_test_suite
+function run_test_suite() {
+    echo "Starting the test suite..."
+
+    if [ -z $TOXENV ]; then
+        echo "Running API spec test suite..."
+
+        _docker_compose --no-ansi up -d lms
+
+        # Wait for mysql database to accept connections
+        _dc_run fonzie dockerize -wait tcp://mysql:3306 -timeout 60s
+
+        local sql="$HOME/.cache/db/$OPENEDX_RELEASE.sql"
+        local database="edxapp"
+
+        if [ -e $sql ]; then
+            echo "Stack status:"
+            _docker_compose ps
+
+            echo "MySQL container logs:"
+            _docker_compose logs mysql
+
+            echo "MySQL container ID:"
+            _docker_compose ps -q mysql
+
+            echo "Loading database schema from cache: $sql"
+            # FIXME: docker-compose is having issues with huge files streamed
+            # via a pty/stdin, so we bypass compose to use raw docker exec
+            # command.
+            docker exec -i $(_docker_compose ps -q mysql) mysql -u root $database < $sql
+        else
+            # Perform database migrations
+            echo "Starting database migration"
+            _dc_run lms python ./manage.py lms migrate
+
+            # Dump database
+            echo "Dump database schema to: $sql"
+            _dc_exec mysql mysqldump -u root $database > $sql
+        fi
+
+        # Run API implementation tests
+        _dc_run node yarn dredd
+    else
+        echo "Running tox:$TOXENV test suite..."
+
+        _dc_run -e TOXENV fonzie tox
+    fi
+}
+
+
+# coverage_report: report test coverage
+#
+# usage: coverage_report
+function coverage_report() {
+    echo "Starting coverage report..."
+
+    _dc_run -e CODECOV_TOKEN fonzie codecov
+}
+
+
+function main() {
+    declare program="$0"
+
+    local install=0
+    local before_install=0
+    local script=0
+    local after_success=0
+
+    while [[ "$#" -ge "1" ]]; do
+        local key="$1"
+        shift
+
+        case "$key" in
+            after-success)
+                after_success=1
+                ;;
+            before-install)
+                before_install=1
+                ;;
+            install)
+                install=1
+                ;;
+            script)
+                script=1
+                ;;
+            -h|--help|help)
+                usage "$program"
+                exit 0
+                ;;
+            *)
+                echo "Unknown option: $key (see --help)"
+                exit 1
+        esac
+    done
+
+    if [ $after_success -eq 1 ]; then
+        coverage_report
+    fi
+
+    if [ $before_install -eq 1 ]; then
+        install_compose
+    fi
+
+    if [ $install -eq 1 ]; then
+        install_dependencies
+    fi
+
+    if [ $script -eq 1 ]; then
+        run_test_suite
+    fi
+}
+
+main "$@"

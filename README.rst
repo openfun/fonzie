@@ -1,5 +1,5 @@
-Fonzie, an Open API for Open edX
-================================
+Fonzie, a FUN API for Open edX
+==============================
 
 |pypi-badge| |travis-badge| |codecov-badge| |doc-badge| |pyversions-badge|
 |license-badge|
