@@ -4,8 +4,8 @@
    contain the root `toctree` directive.
 
 fonzie
-===============================
-edX CRUD API
+======
+An Open API for Open edX
 
 Contents:
 
@@ -15,7 +15,6 @@ Contents:
    readme
    getting_started
    testing
-   internationalization
    modules
    changelog
 
@@ -26,4 +25,3 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
-

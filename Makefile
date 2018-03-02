@@ -46,7 +46,7 @@ upgrade: ## update the requirements/*.txt files with the latest packages satisfy
 	pip-compile --upgrade -o requirements/test.txt requirements/base.in requirements/test.in
 	pip-compile --upgrade -o requirements/travis.txt requirements/travis.in
 	# Let tox control the Django version for tests
-	sed '/django==/d' requirements/test.txt > requirements/test.tmp
+	sed '/^django==/d' requirements/test.txt > requirements/test.tmp
 	mv requirements/test.tmp requirements/test.txt
 
 quality: ## check coding style with pycodestyle and pylint
@@ -55,6 +55,7 @@ quality: ## check coding style with pycodestyle and pylint
 requirements: ## install development environment requirements
 	pip install -qr requirements/dev.txt --exists-action w
 	pip-sync requirements/dev.txt requirements/private.* requirements/test.txt
+	yarn install
 
 test: clean ## run tests in the current virtualenv
 	py.test
@@ -64,7 +65,11 @@ diff_cover: test
 
 test-all: ## run tests on every supported Python/Django combination
 	tox -e quality
+	tox -e spec
 	tox
+
+test-spec: # run tests on API specification (API blueprint)
+	yarn dredd
 
 validate: quality test ## run tests and quality checks
 

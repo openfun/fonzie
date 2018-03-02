@@ -1,0 +1,12 @@
+{
+  "name": "fonzie",
+  "version": "0.1.0",
+  "description": "An Open API for Open edX",
+  "main": "''",
+  "repository": "''",
+  "author": "julien.maupetit@fun-mooc.fr",
+  "license": "AGPL-3.0",
+  "devDependencies": {
+    "dredd": "^5.1.0"
+  }
+}

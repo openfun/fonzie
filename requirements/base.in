@@ -1,4 +1,5 @@
 # Core requirements for using this application
 
-Django                    # Web application framework
-
+Django>=1.11,<2            # Web application framework
+djangorestframework>=3.7   # CRUD API framework
+drf_openapi                # Open API schema generation
