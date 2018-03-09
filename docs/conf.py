@@ -368,7 +368,7 @@ man_pages = [
 #  dir menu entry, description, category)
 texinfo_documents = [
     (master_doc, project_title, documentation_title,
-     author, project_title, 'An Open API for Open edX',
+     author, project_title, 'An FUN API for Open edX',
      'Miscellaneous'),
 ]
 

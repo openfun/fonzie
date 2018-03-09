@@ -11,9 +11,7 @@ from fonzie import __version__ as fonzie_version
 
 
 class VersionView(APIView):
-    """
-    API endpoint to get the running API version
-    """
+    """API endpoint to get the running API version"""
 
     # pylint: disable=redefined-builtin
     def get(self, request, version, format=None):

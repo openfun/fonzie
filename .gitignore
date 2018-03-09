@@ -8,10 +8,9 @@ __pycache__
 *.egg
 *.egg-info
 dist
-build
+build/
 eggs
 parts
-bin
 var
 sdist
 develop-eggs
@@ -82,3 +81,6 @@ default.db
 # Node.js
 node_modules
 yarn-error.log
+
+# Local development environment
+env.d/local

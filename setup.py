@@ -37,7 +37,7 @@ CHANGELOG = open(os.path.join(os.path.dirname(__file__), 'CHANGELOG.rst')).read(
 setup(
     name='fonzie',
     version=VERSION,
-    description="""An Open API for Open edX""",
+    description="""A FUN API for Open edX""",
     long_description=README + '\n\n' + CHANGELOG,
     author='FUN',
     author_email='julien.maupetit@fun-mooc.fr',
@@ -47,7 +47,7 @@ setup(
     ],
     include_package_data=True,
     install_requires=[
-        "Django>=1.8,<2.1"
+        "Django>=1.8,<1.9"
     ],
     license="AGPL 3.0",
     zip_safe=False,
