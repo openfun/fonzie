@@ -26,23 +26,12 @@ import django
 from django.conf import settings
 from django.utils import six
 
-
-def get_version(*file_paths):
-    """
-    Extract the version string from the file at the given relative path fragments.
-    """
-    filename = os.path.join(os.path.dirname(__file__), *file_paths)
-    version_file = open(filename).read()    # pylint: disable=open-builtin
-    version_match = re.search(r"^__version__ = ['\"]([^'\"]*)['\"]", version_file, re.M)
-    if version_match:
-        return version_match.group(1)
-    raise RuntimeError('Unable to find version string.')
-
+from ..fonzie import __version__ as package_version
 
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(REPO_ROOT)
 
-VERSION = get_version('../fonzie', '__init__.py')
+VERSION = package_version
 
 # Configure Django for autodoc usage
 settings.configure()
