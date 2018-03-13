@@ -1,6 +1,6 @@
 .PHONY: clean compile_translations coverage docs dummy_translations \
 	extract_translations fake_translations help pull_translations push_translations \
-	quality requirements run selfcheck stop test test-all upgrade validate
+	quality requirements run selfcheck stop test test-all validate
 
 .DEFAULT_GOAL := help
 
@@ -63,17 +63,6 @@ coverage: clean ## generate and view HTML coverage report
 docs: ## generate Sphinx HTML documentation, including API docs
 	$(TOX) -e docs
 	$(BROWSER) docs/_build/html/index.html
-
-upgrade: ## update the requirements/*.txt files with the latest packages satisfying requirements/*.in
-	$(PIP) install -q pip-tools
-	$(PIP-COMPILE) --upgrade -o requirements/dev.txt requirements/base.in requirements/dev.in requirements/quality.in
-	$(PIP-COMPILE) --upgrade -o requirements/doc.txt requirements/base.in requirements/doc.in
-	$(PIP-COMPILE) --upgrade -o requirements/quality.txt requirements/quality.in
-	$(PIP-COMPILE) --upgrade -o requirements/test.txt requirements/base.in requirements/test.in
-	$(PIP-COMPILE) --upgrade -o requirements/travis.txt requirements/travis.in
-	# Let tox control the Django version for tests
-	$(COMPOSE_RUN_FONZIE) sed '/^django==/d' requirements/test.txt > requirements/test.tmp
-	$(COMPOSE_RUN_FONZIE) mv requirements/test.tmp requirements/test.txt
 
 quality: ## check coding style with pycodestyle and pylint
 	$(TOX) -e quality

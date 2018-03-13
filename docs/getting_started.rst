@@ -1,74 +1,85 @@
 Getting Started
 ===============
 
-If you have not already done so, create/activate a `virtualenv`_. Unless otherwise stated, assume all terminal code
-below is executed within the virtualenv.
+Fonzie is supposed to be installed as a Django application running in an Open
+edX platform instance. Fonzie has been designed to be integrated with the
+current Open edX release (Ginkgo at the time of writing). We plan to support the
+next Open edX release (Hawthorn) in a near future.
 
-.. _virtualenv: https://virtualenvwrapper.readthedocs.org/en/latest/
+Pre-requisites for Fonzie contributors
+--------------------------------------
 
-
-Pre-requisites
---------------
-
-We are using `Dredd <http://dredd.readthedocs.io/en/latest/>`_ to test our API
-implementation. It requires `Node.js <https://nodejs.org/en/>`_ to run and we
-are using `Yarn <https://yarnpkg.com/en/>`_ to install it. So make sure both
-``node`` and ``yarn`` are installed and functionnal before pursuing this
-installation.
+We extensively use `Docker <https://docs.docker.com/install/>`_ (17.12+) and
+`Docker compose <https://docs.docker.com/compose/install/>`_ (1.18+) in our
+development workflow. So, if you intend to work on Fonzie, please, make sure they
+are both installed and functionnal before pursuing this installation.
 
 Install dependencies
 --------------------
 
-Dependencies can be installed via `pip` in your project's virtual environment:
+To install Fonzie in an Open edX project, two choices are offered depending on
+the way you are running your instance. If Open edX runs as a suite of Docker
+containers, Fonzie's development environment can serve as an example of how to
+integrate a Django application in `fun-platform
+<https://github.com/openfun/fun-platform>`_'s docker stack. Alternatively, if
+you are running Open edX on a bare metal server (or virtual machine), the
+installation protocol follows a standard Django procedure that will be described
+below.
+
+Standard procedure
+^^^^^^^^^^^^^^^^^^
+
+Install fonzie and its dependencies in your Open edX installation with ``pip``:
 
 .. code-block:: bash
 
-    # Create a python 2.7 virtual environment
-    $ virtualenv venv
+    $ (sudo) pip install fonzie
 
-    # Activate your virtual environment
-    $ source venv/bin/activate
+Docker procedure
+^^^^^^^^^^^^^^^^
 
-    # Install fonzie and its dependencies in your virtualenv
-    (venv) $ pip install fonzie
-
-Alternatively, if you intend to work on this project, clone the repository first and then
-install requirements _via_ the command below:
-
-.. code-block:: bash
-
-    $ git clone git@github.com:openfun/fonzie.git
-    (venv) $ make requirements
+TODO
 
 Configure Fonzie
 ----------------
 
-Edit the settings of your project  (_e.g._ ``my_project/settings.py``) by adding
+Once installed, Fonzie needs to be configured as a standard Django application,
+_i.e._ adding ``fonzie`` to your ``INSTALLED_APPS`` and Fonzie's URLs to your
+project's URLs. Achieving those two steps depends on the way you are running
+Open edX.
+
+Standard procedure
+^^^^^^^^^^^^^^^^^^
+
+Edit the LMS settings of your Open edX instance  (_e.g._ ``lms/envs/private.py``) by adding
 ``fonzie`` to your ``INSTALLED_APPS`` and configure Django Rest Framework (_aka_
 DRF) API versioning support as follows:
 
 .. code-block:: python
 
-    # my_project/settings.py
-
-    INSTALLED_APPS = (
-        # [...]
+    # lms/env/private.py
+    INSTALLED_APPS += (
         'fonzie',
     )
 
     # Django Rest Framework (aka DRF)
-    REST_FRAMEWORK = {
+    REST_FRAMEWORK.update({
         'ALLOWED_VERSIONS': ('1.0', ),
         'DEFAULT_VERSION': '1.0',
         'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.URLPathVersioning',
-    }
+    })
 
-And finally, configure Fonzie urls for your project:
+And finally, add Fonzie urls in Open edX LMS's URLs:
 
 .. code-block:: python
 
-    # my_project/urls.py
+    # lms/urls.py
     urlpatterns = [
         # [...]
         url(r'^api/', include('fonzie.urls')),
     ]
+
+Docker procedure
+^^^^^^^^^^^^^^^^
+
+TODO

@@ -19,18 +19,12 @@ RUN curl -L \
     tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && \
     rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
 
-# Install project requirements
-ADD ./requirements /app/fonzie/requirements
-RUN pip install -q --exists-action w \
-        -r /app/fonzie/requirements/dev.txt \
-        -r /app/fonzie/requirements/private.*
-
 # Add application sources
 ADD . /app/fonzie/
 
-# Install django application in development mode
+# Install application and project requirements
 RUN cd /app/fonzie && \
-    pip install -e .
+    pip install --exists-action w -r requirements.txt
 
 # FIXME: pyopenssl seems to be linked with a wrong openssl release leading to
 # bad handskake ssl errors. This looks ugly, but forcing pyopenssl

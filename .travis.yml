@@ -1,38 +1,30 @@
-# Config file for automatic testing at travis-ci.org
 sudo: required
-
 language: python
-
 cache:
   directories:
-    - $HOME/.cache/db
-    - node_modules
-
+  - "$HOME/.cache/db"
+  - node_modules
 env:
-  - TOXENV=quality
-  - TOXENV=docs
-  - TOXENV=django18
-  - API_SPEC=1 OPENEDX_RELEASE=ginkgo.1
-
+- TOXENV=quality
+- TOXENV=docs
+- TOXENV=django18
+- API_SPEC=1 OPENEDX_RELEASE=ginkgo.1
 before_install:
-  # Upgrade docker-compose
-  - bin/ci before-install
-
+- bin/ci before-install
 install:
-  - bin/ci install
-
+- bin/ci install
 script:
-  - bin/ci script
-
+- bin/ci script
 after_success:
-  - bin/ci after-success
-
-# Set password via "travis encrypt --add deploy.password"; for details, see
-# https://docs.travis-ci.com/user/deployment/pypi
+- bin/ci after-success
 deploy:
   provider: pypi
-  user: edx
+  user: openfun
   distributions: sdist bdist_wheel
   on:
     tags: true
-    condition: '$TOXENV = quality'
+    condition: "$TOXENV = quality"
+  # Encrypted password set via "travis encrypt --add deploy.password"; for
+  # details, see https://docs.travis-ci.com/user/deployment/pypi
+  password:
+    secure: Oa6dtKi4mbJfMkduQmwZRwPH9Nu8FRJKas1xdaTfhrKlj0wr4+4IfEp0Vn9egyeamS94r06KlwSWN3c8PVIlPV7noUeewA5jAPYSdGbFCmOxNGgr3BQh1GL4mF/kxoQmG9GdeEoNOuBhbMtHOIbHIB8fH+ct8zCsNxW0xMjSRbioCEiQTD8FdDIPjXIg4W/cqJ08A1nFNhrVVSRV5gUa9LAH1S5eA9+GmyAB9kwSZXcbqF3imyRUpGPTLMGlb0qgrPLnCgtbh+GgyN5SFpL4USqrgjpNddCv9EYKgJ3ulALqPIuwbVgjt5KdYt/4cDpaHtc53lHpVpYsZmGCwcdizTvJgOZzaN9FAmJjdNdFBHBO0whb7QVrDE4rRmKqlMf5vTqFH15jkRZtRkyvHowjbBMUtJ2qsmNBVUWax20l/2RH3lwk2MW1goC1XrOg/eymjLSMAM97voIu1EO1RSql94avg/xXLRzfftjvqB4VvdJOPuXoZkJlKimiFPJP3O+yYubpBGBotabSRSGGBhRpOLD5vbRGdx4qI+gvCyiLlD0T4+pFQ+LXucD8Y/GrxT8CFWAM5lUMFGQQNikNizKQOxCnGZhRtyTzhwCZ84PmFr0XIrOYrxCvELCZlA1sUDptdx8W6gQbFF+znKrhLbffomd3dtpPRq/qo+CO7UVmxtg=
