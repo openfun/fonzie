@@ -8,9 +8,11 @@ ENV DOCKERIZE_VERSION v0.6.0
 ARG user=0
 ARG group=0
 
-# Add a non-privileged user to run the application
-RUN groupadd --gid $group app && \
-    useradd --uid $user --gid $group --home /app --create-home app
+# Add a non-privileged user to run the application if given as a build argument
+RUN if [ ${user} -ne 0 -a ${group} -ne 0 ]; then \
+        groupadd --gid $group app ; \
+        useradd --uid $user --gid $group --home /app app ; \
+    fi
 
 # Install dockerize
 RUN curl -L \

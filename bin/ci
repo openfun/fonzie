@@ -48,7 +48,6 @@ function install_dependencies() {
     echo "Building fonzie containers..."
 
     _dc_build lms
-    _dc_build fonzie
     FONZIE_UNSET_USER=1 _dc_run --no-deps node yarn install --no-progress
 }
 
@@ -59,49 +58,49 @@ function install_dependencies() {
 function run_test_suite() {
     echo "Starting the test suite..."
 
-    if [ -z $TOXENV ]; then
-        echo "Running API spec test suite..."
+    _docker_compose --no-ansi up -d lms
 
-        _docker_compose --no-ansi up -d lms
+    # Wait for mysql database to accept connections
+    _dc_run fonzie dockerize -wait tcp://mysql:3306 -timeout 60s
 
-        # Wait for mysql database to accept connections
-        _dc_run fonzie dockerize -wait tcp://mysql:3306 -timeout 60s
+    local sql="$HOME/.cache/db/$OPENEDX_RELEASE.sql"
+    local database="edxapp"
 
-        local sql="$HOME/.cache/db/$OPENEDX_RELEASE.sql"
-        local database="edxapp"
+    if [ -e $sql ]; then
+        echo "Stack status:"
+        _docker_compose ps
 
-        if [ -e $sql ]; then
-            echo "Stack status:"
-            _docker_compose ps
+        echo "MySQL container logs:"
+        _docker_compose logs mysql
 
-            echo "MySQL container logs:"
-            _docker_compose logs mysql
+        echo "MySQL container ID:"
+        _docker_compose ps -q mysql
 
-            echo "MySQL container ID:"
-            _docker_compose ps -q mysql
-
-            echo "Loading database schema from cache: $sql"
-            # FIXME: docker-compose is having issues with huge files streamed
-            # via a pty/stdin, so we bypass compose to use raw docker exec
-            # command.
-            docker exec -i $(_docker_compose ps -q mysql) mysql -u root $database < $sql
-        else
-            # Perform database migrations
-            echo "Starting database migration"
-            _dc_run lms python ./manage.py lms migrate
-
-            # Dump database
-            echo "Dump database schema to: $sql"
-            _dc_exec mysql mysqldump -u root $database > $sql
-        fi
-
-        # Run API implementation tests
-        _dc_run node yarn dredd
+        echo "Loading database schema from cache: $sql"
+        # FIXME: docker-compose is having issues with huge files streamed
+        # via a pty/stdin, so we bypass compose to use raw docker exec
+        # command.
+        docker exec -i $(_docker_compose ps -q mysql) mysql -u root $database < $sql
     else
-        echo "Running tox:$TOXENV test suite..."
+        # Perform database migrations
+        echo "Starting database migration"
+        _dc_run lms python ./manage.py lms migrate
 
-        _dc_run -e TOXENV fonzie tox
+        # Dump database
+        echo "Dump database schema to: $sql"
+        _dc_exec mysql mysqldump -u root $database > $sql
     fi
+
+    case "$CI_STEP" in
+        quality|docs|test)
+            make ${CI_STEP}
+            ;;
+        test-spec)
+            echo "Running API spec test suite..."
+            _dc_run node yarn dredd
+            ;;
+        *)
+    esac
 }
 
 

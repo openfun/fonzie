@@ -21,3 +21,10 @@ INSTALLED_APPS += (
 )
 
 ROOT_URLCONF = 'lms.urls'
+
+# Django Rest Framework (aka DRF)
+REST_FRAMEWORK = {
+    'ALLOWED_VERSIONS': ('1.0', ),
+    'DEFAULT_VERSION': '1.0',
+    'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.URLPathVersioning',
+}
