@@ -18,6 +18,7 @@ class VersionViewTestCase(APITestCase):
 
     def setUp(self):
         """Set view url"""
+        super(VersionViewTestCase, self).setUp()
 
         self.url = reverse('status:version', kwargs={'version': '1.0'})
 

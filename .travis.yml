@@ -5,10 +5,10 @@ cache:
   - "$HOME/.cache/db"
   - node_modules
 env:
-- TOXENV=quality
-- TOXENV=docs
-- TOXENV=django18
-- API_SPEC=1 OPENEDX_RELEASE=ginkgo.1
+- CI_STEP=quality
+- CI_STEP=docs
+- CI_STEP=test
+- CI_STEP=test-spec OPENEDX_RELEASE=ginkgo.1
 before_install:
 - bin/ci before-install
 install:
@@ -23,7 +23,7 @@ deploy:
   distributions: sdist bdist_wheel
   on:
     tags: true
-    condition: "$TOXENV = quality"
+    condition: "$CI_STEP = quality"
   # Encrypted password set via "travis encrypt --add deploy.password"; for
   # details, see https://docs.travis-ci.com/user/deployment/pypi
   password:

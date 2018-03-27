@@ -30,7 +30,8 @@ services:
       - "8072:8000"
     volumes:
       - ./edx-platform/config/docker_run_lms.py:/config/docker_run_lms.py
-      - ./edx-platform/lms/urls.py:/app/edx-platform/lms/urls.py
+      - ./edx-platform/lms/urls.py:/edx/app/edxapp/edx-platform/lms/urls.py
+      - ./edx-platform/reports:/edx/app/edxapp/edx-platform/reports
       - .:/app/fonzie
     tmpfs:
       - /data/static/lms
@@ -43,18 +44,6 @@ services:
       - mongodb
       - memcached
       - rabbitmq
-
-  cms:
-    image: edxapp-fonzie
-    environment:
-      SERVICE_VARIANT: cms
-      DJANGO_SETTINGS_MODULE: cms.envs.docker_run
-    ports:
-      - "8082:8000"
-    command: >
-      dockerize -wait tcp://mysql:3306 -timeout 60s python manage.py cms runserver 0.0.0.0:8000
-    depends_on:
-      - lms
 
   fonzie:
     image: edxapp-fonzie
