@@ -92,7 +92,7 @@ quality: ## check coding style with pycodestyle and pylint
 .PHONY: quality
 
 run: ## start development server
-	$(COMPOSE) up -d
+	$(COMPOSE) up -d lms
 .PHONY: run
 
 selfcheck: ## check that the Makefile is well-formed
