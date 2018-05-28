@@ -20,6 +20,10 @@ services:
   rabbitmq:
     image: rabbitmq:3.6
 
+  # The Open edX LMS service image is build thanks to the project's Dockerfile.
+  # The resulting image is called 'edxapp-fonzie'. We use Docker volumes to
+  # override settings (docker_run_development) and redefine URLs to only add
+  # Fonzie's URLS (see edx-platform/lms/urls.py).
   lms:
     build: .
     image: edxapp-fonzie
@@ -37,6 +41,8 @@ services:
       - /data/static/lms
       - /data/media
       - /data/logs
+    # We use dockerize to wait for the database to be up before running django
+    # development server
     command: >
       dockerize -wait tcp://mysql:3306 -timeout 60s python manage.py lms runserver 0.0.0.0:8000
     depends_on:
@@ -45,6 +51,9 @@ services:
       - memcached
       - rabbitmq
 
+  # The fonzie service uses the image built for the lms service. We only
+  # redefine the working_dir to use the container as a mean to run tests and
+  # code quality checking on the Fonzie application itself.
   fonzie:
     image: edxapp-fonzie
     volumes:
