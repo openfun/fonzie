@@ -26,7 +26,7 @@ ADD . /app/fonzie/
 
 # Install application and project requirements
 RUN cd /app/fonzie && \
-    pip install --exists-action w -r requirements.txt
+    pip install --exists-action w -r requirements-dev.txt
 
 # FIXME: pyopenssl seems to be linked with a wrong openssl release leading to
 # bad handskake ssl errors. This looks ugly, but forcing pyopenssl
