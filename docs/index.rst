@@ -14,6 +14,7 @@ Contents:
 
    readme
    getting_started
+   developer_guide
    testing
    modules
    changelog
