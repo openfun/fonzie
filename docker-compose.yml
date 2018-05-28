@@ -37,6 +37,7 @@ services:
       - ./edx-platform/lms/urls.py:/edx/app/edxapp/edx-platform/lms/urls.py
       - ./edx-platform/reports:/edx/app/edxapp/edx-platform/reports
       - .:/app/fonzie
+      - .pytest_cache:/edx/app/edxapp/edx-platform/.pytest_cache
     tmpfs:
       - /data/static/lms
       - /data/media

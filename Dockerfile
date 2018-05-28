@@ -1,5 +1,11 @@
 FROM fundocker/edxapp:ginkgo.1-1.0.3-dev
 
+# Disclaimer:
+#
+# This image is not intended to be used in production. For now, it has been
+# designed to ease Fonzie's development. In a near future, we will cook a
+# production-ready image and rename this Dockerfile as Dockerfile-dev.
+
 # Dependencies
 ENV DOCKERIZE_VERSION v0.6.0
 

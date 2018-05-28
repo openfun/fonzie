@@ -104,6 +104,10 @@ stop:  ## stop development server
 .PHONY: stop
 
 test: clean ## run python tests suite
+	# Create .pytest_cache directory with appropriate permissions. We cannot
+	# rely on docker-compose volume as if the directory does not exists, it will
+	# create one owned by root:root.
+	@mkdir -p .pytest_cache
 	$(PYTEST)
 .PHONY: test
 
