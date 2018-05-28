@@ -6,28 +6,8 @@ edX platform instance. Fonzie has been designed to be integrated with the
 current Open edX release (Ginkgo at the time of writing). We plan to support the
 next Open edX release (Hawthorn) in a near future.
 
-Pre-requisites for Fonzie contributors
---------------------------------------
-
-We extensively use `Docker <https://docs.docker.com/install/>`_ (17.12+) and
-`Docker compose <https://docs.docker.com/compose/install/>`_ (1.18+) in our
-development workflow. So, if you intend to work on Fonzie, please, make sure they
-are both installed and functionnal before pursuing this installation.
-
 Install dependencies
 --------------------
-
-To install Fonzie in an Open edX project, two choices are offered depending on
-the way you are running your instance. If Open edX runs as a suite of Docker
-containers, Fonzie's development environment can serve as an example of how to
-integrate a Django application in `fun-platform
-<https://github.com/openfun/fun-platform>`_'s docker stack. Alternatively, if
-you are running Open edX on a bare metal server (or virtual machine), the
-installation protocol follows a standard Django procedure that will be described
-below.
-
-Standard procedure
-^^^^^^^^^^^^^^^^^^
 
 Install fonzie and its dependencies in your Open edX installation with ``pip``:
 
@@ -35,23 +15,18 @@ Install fonzie and its dependencies in your Open edX installation with ``pip``:
 
     $ (sudo) pip install fonzie
 
-Docker procedure
-^^^^^^^^^^^^^^^^
-
-TODO
 
 Configure Fonzie
 ----------------
 
 Once installed, Fonzie needs to be configured as a standard Django application,
-_i.e._ adding ``fonzie`` to your ``INSTALLED_APPS`` and Fonzie's URLs to your
-project's URLs. Achieving those two steps depends on the way you are running
-Open edX.
+*i.e.* adding ``fonzie`` to your ``INSTALLED_APPS`` and Fonzie's URLs to your
+project's URLs.
 
-Standard procedure
-^^^^^^^^^^^^^^^^^^
+Open edX settings
+^^^^^^^^^^^^^^^^^
 
-Edit the LMS settings of your Open edX instance  (_e.g._ ``lms/envs/private.py``) by adding
+Edit the LMS settings of your Open edX instance  (*e.g.* ``lms/envs/private.py``) by adding
 ``fonzie`` to your ``INSTALLED_APPS`` and configure Django Rest Framework (_aka_
 DRF) API versioning support as follows:
 
@@ -69,7 +44,11 @@ DRF) API versioning support as follows:
         'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.URLPathVersioning',
     })
 
-And finally, add Fonzie urls in Open edX LMS's URLs:
+
+Open edX URLs
+^^^^^^^^^^^^^
+
+Add Fonzie's urls in Open edX LMS's URLs:
 
 .. code-block:: python
 
@@ -79,7 +58,43 @@ And finally, add Fonzie urls in Open edX LMS's URLs:
         url(r'^api/', include('fonzie.urls')),
     ]
 
-Docker procedure
-^^^^^^^^^^^^^^^^
 
-TODO
+Test your installation
+----------------------
+
+Now that we've installed and configured Fonzie, it's time to test that our API
+is responding! If we consider that installed Open edX LMS is served from
+``www.mydomain.com`` on the port ``8080``, we can use the ``http`` tool (see `HTTPie
+project <https://httpie.org/>`_) to query the API:
+
+
+.. code-block:: bash
+
+    $ http http://www.mydomain.com:8080/api/v1.0/status/version
+
+    # http command output
+    HTTP/1.0 200 OK
+    Allow: GET, HEAD, OPTIONS
+    Content-Language: en
+    Content-Type: application/json
+    Date: Mon, 28 May 2018 15:37:02 GMT
+    Server: WSGIServer/0.1 Python/2.7.12
+    Vary: Accept, Accept-Language, Cookie
+    X-Frame-Options: ALLOW
+
+    {
+        "version": "0.1.0"
+    }
+
+
+Alternatively, you can use ``curl``:
+
+
+.. code-block:: bash
+
+    $ curl http://www.mydomain.com:8080/api/v1.0/status/version
+    {"version":"0.1.0"}
+
+
+The output of this command should be a JSON payload containing the running
+version of Fonzie.
