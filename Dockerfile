@@ -16,8 +16,8 @@ RUN if [ ${user} -ne 0 -a ${group} -ne 0 ]; then \
 
 # Install dockerize
 RUN curl -L \
-         --output dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
-         https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && \
+        --output dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
+        https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && \
     tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && \
     rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
 
@@ -35,7 +35,8 @@ RUN pip install -U pyopenssl
 
 # Run container with the $user:$group user
 #
-# We recommand to build the container with the following build arguments to map container user
-# with the HOST user:
+# We recommend to build the container with the following build arguments to map
+# container user with the HOST user:
+#
 # docker build --build-arg user=$(id -u) --build-arg group=$(id -g)
 USER $user:$group
