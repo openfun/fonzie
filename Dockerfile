@@ -1,4 +1,4 @@
-FROM fundocker/edxapp:ginkgo.1-dev
+FROM fundocker/edxapp:ginkgo.1-1.0.3-dev
 
 # Dependencies
 ENV DOCKERIZE_VERSION v0.6.0

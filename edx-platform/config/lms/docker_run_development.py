@@ -1,6 +1,12 @@
-from .devstack import *
+from docker_run_production import *
 
-update_module_store_settings(MODULESTORE, doc_store_settings=DOC_STORE_CONFIG)
+
+DEBUG = True
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+PIPELINE_ENABLED = False
+STATICFILES_STORAGE = 'openedx.core.storage.DevelopmentStorage'
 
 STATIC_ROOT = '/data/static/lms'
 STATIC_URL = '/static/'
