@@ -2,4 +2,6 @@
 
 source "$(dirname "${BASH_SOURCE[0]}")/config.sh"
 
-_dc_run lms pytest -c /app/fonzie/setup.cfg "$@"
+docker-compose run --rm lms \
+    dockerize -wait tcp://mysql:3306 -timeout 60s \
+        pytest -c /edx/app/fonzie/setup.cfg "$@"

@@ -1,7 +1,9 @@
 dry-run: null
 hookfiles: null
-language: python
-sandbox: false
+# FIXME: define nodejs as the server language to avoid having to install python
+# hooks since we don't use them for now. Switching to python language means
+# building our own Dredd Docker image for python servers.
+language: nodejs
 init: false
 custom: {}
 names: false
@@ -15,7 +17,7 @@ inline-errors: false
 details: false
 method: []
 color: true
-level: info
+logLevel: warning
 timestamp: false
 silent: false
 path: []

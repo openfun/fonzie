@@ -1,0 +1,325 @@
+version: 2
+jobs:
+  # ---- Project jobs ----
+  # Check that the git history is clean and complies with our expectations
+  lint-git:
+    docker:
+      - image: circleci/python:3.7-stretch
+    working_directory: ~/fun
+    steps:
+      - checkout
+      # Make sure the changes don't add a "print" statement to the code base.
+      # We should exclude the ".circleci" folder from the search as the very command that checks
+      # the absence of "print" is including a "print(" itself.
+      - run:
+          name: enforce absence of print statements in code
+          command: |
+            ! git diff origin/master..HEAD -- . ':(exclude).circleci' | grep "print("
+      - run:
+          name: Check absence of fixup commits
+          command: |
+            ! git log | grep 'fixup!'
+      - run:
+          name: Install gitlint
+          command: |
+            pip install --user gitlint
+      - run:
+          name: lint commit messages added to master
+          command: |
+            ~/.local/bin/gitlint --commits origin/master..HEAD
+
+  # Check that the CHANGELOG has been updated in the current branch
+  check-changelog:
+    docker:
+      - image: circleci/buildpack-deps:stretch-scm
+    working_directory: ~/fun
+    steps:
+      - checkout
+      - run:
+          name: Check that the CHANGELOG has been modified in the current branch
+          command: |
+            git whatchanged --name-only --pretty="" origin..HEAD | grep CHANGELOG
+
+  # Check that the CHANGELOG max line length does not exceed 80 characters
+  lint-changelog:
+    docker:
+      - image: debian:stretch
+    working_directory: ~/fun
+    steps:
+      - checkout
+      - run:
+          name: Check CHANGELOG max line length
+          command: |
+            # Get the longuest line width (ignoring release links)
+            test $(cat CHANGELOG.md | grep -Ev "^\[.*\]: https://github.com/openfun" | wc -L) -le 80
+
+  # ---- Backend jobs ----
+  # Build backend development environment
+  build-back:
+    docker:
+      - image: circleci/python:2.7-stretch
+    working_directory: ~/fun
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-back-dependencies-{{ .Revision }}
+            - v1-back-dependencies
+      - run:
+          name: Install development dependencies
+          command: pip install --user .[dev,doc,quality,test,ci]
+      - save_cache:
+          paths:
+            - ~/.local
+          key: v1-back-dependencies-{{ .Revision }}
+
+  build-docs:
+    docker:
+      - image: circleci/python:2.7-stretch
+    working_directory: ~/fun
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-back-dependencies-{{ .Revision }}
+            - v1-back-dependencies
+      - run:
+          name: Add ~/.local/bin to the PATH
+          command: echo 'export PATH=${PATH}:${HOME}/.local/bin' >> $BASH_ENV
+      - run:
+          name: Compile documentation
+          command: make -C docs html
+
+  lint-back:
+    docker:
+      - image: circleci/python:2.7-stretch
+    working_directory: ~/fun
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-back-dependencies-{{ .Revision }}
+      - run:
+          name: Add ~/.local/bin to the PATH
+          command: echo 'export PATH=${PATH}:${HOME}/.local/bin' >> $BASH_ENV
+      - run:
+          name: Lint code with pylint
+          command: pylint fonzie tests
+      - run:
+          name: Lint code with pylint (py3k)
+          command: pylint --py3k fonzie tests
+      - run:
+          name: Lint code with pycodestyle
+          command: pycodestyle fonzie tests
+      - run:
+          name: Lint doc with pydocstyle
+          command: pydocstyle fonzie tests
+      - run:
+          name: Lint code with isort
+          command: |
+            isort --virtual-env ~/.local --check-only --recursive tests fonzie manage.py setup.py
+      - run:
+          name: Lint code with pyroma
+          command: |
+            pyroma .
+      - run:
+          name: Lint documentation with doc8
+          command: |
+            doc8 --ignore-path docs/_build README.rst docs
+
+  test-back:
+    machine: true
+    working_directory: ~/fun
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-back-dependencies-{{ .Revision }}
+      - run:
+          name: Build Docker image
+          command: make build
+      - run:
+          name: Run tests
+          command: make test
+      # To publish coverage report, you will need to define the CODECOV_TOKEN
+      # secret environment variables in CircleCI UI
+      - run:
+          name: Publish coverage report
+          command: make report
+
+  test-spec:
+    machine: true
+    working_directory: ~/fun
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-edxapp-sql-dump
+      - run:
+          name: Start the test stack
+          command: make run
+      - run:
+          name: Wait for database to be up
+          command: docker-compose exec lms dockerize -wait tcp://mysql:3306 -timeout 60s
+      - run:
+          name: Load edxapp SQL dump (if any)
+          command: |
+            if [[ -f ~/sql/dump.sql ]]; then
+              # FIXME: docker-compose is having issues with huge files streamed
+              # via a pty/stdin, so we bypass compose to use raw docker exec
+              # command.
+              docker exec -i $(docker-compose ps -q mysql) mysql -u root edxapp < ~/sql/dump.sql
+            else
+              echo "There is no SQL dump available for now (you'll have to wait)."
+            fi
+      - run:
+          name: Run database migrations
+          command: make migrate
+      - run:
+          name: Dump SQL state to speed up next run migrations
+          command: |
+            if [[ ! -f ~/sql/dump.sql ]]; then
+              mkdir -p ~/sql
+              # FIXME: docker-compose is having issues with huge files streamed
+              # via a pty/stdin, so we bypass compose to use raw docker exec
+              # command.
+              docker exec -i $(docker-compose ps -q mysql) mysqldump -u root edxapp > ~/sql/dump.sql
+            else
+              echo "SQL dump file has already been generated. Skipping this step."
+            fi
+      - save_cache:
+          paths:
+            - ~/sql/dump.sql
+          key: v1-edxapp-sql-dump
+      - run:
+          name: Run spec tests
+          command: make test-spec
+
+  # ---- Packaging jobs ----
+  package-back:
+    docker:
+      - image: circleci/python:2.7-stretch
+    working_directory: ~/fun
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-back-dependencies-{{ .Revision }}
+      - run:
+          name: Build python package
+          command: python setup.py sdist bdist_wheel
+      - run:
+          name: Check the package README
+          command: ~/.local/bin/twine check dist/*
+      # Persist build packages to the workspace
+      - persist_to_workspace:
+          root: ~/fun
+          paths:
+            - dist
+      # Store packages as artifacts to download/test them
+      - store_artifacts:
+          path: ~/fun/dist
+
+  # Publishing to PyPI requires that:
+  #   * you already registered to pypi.org
+  #   * you have define both the TWINE_USERNAME & TWINE_PASSWORD secret
+  #     environment variables in CircleCI UI (with your PyPI credentials)
+  pypi:
+    docker:
+      - image: circleci/python:2.7-stretch
+    working_directory: ~/fun
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-back-dependencies-{{ .Revision }}
+      # Restore built python packages
+      - attach_workspace:
+          at: ~/fun
+      - run:
+          name: List built packages
+          command: ls dist/*
+      - run:
+          name: Upload built packages to PyPI
+          command: ~/.local/bin/twine upload dist/*
+
+workflows:
+  version: 2
+
+  fonzie:
+    jobs:
+      # Git jobs
+      #
+      # Check validity of git history
+      - lint-git:
+          filters:
+            tags:
+              only: /.*/
+      # Check CHANGELOG update
+      - check-changelog:
+          filters:
+            branches:
+              ignore: master
+            tags:
+              only: /(?!^v).*/
+      - lint-changelog:
+          filters:
+            branches:
+              ignore: master
+            tags:
+              only: /.*/
+
+      # Backend jobs
+      #
+      # Build, lint and test application code
+      - build-back:
+          filters:
+            tags:
+              only: /.*/
+      - build-docs:
+          filters:
+            tags:
+              only: /.*/
+      - lint-back:
+          requires:
+            - build-back
+          filters:
+            tags:
+              only: /.*/
+      - test-back:
+          requires:
+            - lint-back
+          filters:
+            tags:
+              only: /.*/
+      - test-spec:
+          requires:
+            - lint-back
+          filters:
+            tags:
+              only: /.*/
+
+      # Packaging: python
+      #
+      # Build the python package
+      - package-back:
+          requires:
+            - build-docs
+            - test-spec
+            - test-back
+          filters:
+            tags:
+              only: /.*/
+
+      # PyPI publication.
+      #
+      # Publish python package to PYPI only if all build, lint and test jobs
+      # succeed and it has been tagged with a tag starting with the letter v
+      - pypi:
+          requires:
+            - package-back
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v.*/

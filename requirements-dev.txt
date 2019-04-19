@@ -1,1 +1,1 @@
--e .[dev,doc,quality,test,travis]
+-e .[dev,doc,quality,test,ci]
