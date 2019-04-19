@@ -17,7 +17,6 @@ Contents:
    developer_guide
    testing
    modules
-   changelog
 
 
 Indices and tables
