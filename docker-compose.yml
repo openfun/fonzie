@@ -1,7 +1,6 @@
 version: "3.2"
 
 services:
-
   mysql:
     image: mysql:5.6
     env_file: env.d/dev
@@ -61,10 +60,10 @@ services:
       - .:/app/fonzie
     working_dir: /app/fonzie
 
-  node:
-    image: node:9
-    working_dir: /app/fonzie
+  dredd:
+    image: apiaryio/dredd:latest
+    working_dir: /api
     volumes:
-      - .:/app/fonzie
+      - .:/api
     depends_on:
       - lms
