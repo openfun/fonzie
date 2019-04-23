@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 
-source "$(dirname "${BASH_SOURCE[0]}")/config.sh"
+declare -r USER_ID="$(id -u)"
+export USER_ID
+declare -r GROUP_ID="$(id -g)"
+export GROUP_ID
 
 docker-compose run --rm lms \
     dockerize -wait tcp://mysql:3306 -timeout 60s \

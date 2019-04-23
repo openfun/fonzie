@@ -20,7 +20,7 @@ class VersionViewTestCase(APITestCase):
         """Set view url"""
         super(VersionViewTestCase, self).setUp()
 
-        self.url = reverse('status:version', kwargs={'version': '1.0'})
+        self.url = reverse('fonzie:status:version', kwargs={'version': '1.0'})
 
     def test_get(self):
         """HTTP/GET returns API version"""

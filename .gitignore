@@ -79,5 +79,3 @@ default.db
 node_modules
 yarn-error.log
 
-# Local development environment
-env.d/local
