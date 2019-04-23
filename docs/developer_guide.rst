@@ -34,15 +34,8 @@ Fonzie's repository and then build the Docker-based development stack with:
 The ``make bootstrap`` command will:
 
 - build an ``edx-platform`` Docker image with Fonzie installed and configured,
-- install node dependencies (``dredd``, etc.),
+- run the development server
 - perform Open edx LMS database migrations.
-
-Now you should be able to start the development server via:
-
-.. code-block:: bash
-
-    $ make run
-
 
 Fonzie's API should be accessible from:
 `http://localhost:8072/api/v1.0/
@@ -79,4 +72,4 @@ If your work on Fonzie requires new dependencies, you will need to:
 
 .. code-block:: bash
 
-    $ bin/run lms python manage.py lms migrate
+    $ make migrate

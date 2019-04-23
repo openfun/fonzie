@@ -3,7 +3,7 @@ version: "3.2"
 services:
   mysql:
     image: mysql:5.6
-    env_file: env.d/dev
+    env_file: .env
     command: mysqld --character-set-server=utf8 --collation-server=utf8_general_ci
 
   mongodb:
@@ -16,40 +16,49 @@ services:
   memcached:
     image: memcached:1.4
 
-  rabbitmq:
-    image: rabbitmq:3.6
+  mailcatcher:
+    image: sj26/mailcatcher:latest
+    ports:
+      - "1080:1080"
 
   # The Open edX LMS service image is build thanks to the project's Dockerfile.
   # The resulting image is called 'edxapp-fonzie'. We use Docker volumes to
   # override settings (docker_run_development) and redefine URLs to only add
   # Fonzie's URLS (see edx-platform/lms/urls.py).
   lms:
-    build: .
+    build:
+      context: .
+      args:
+        USER_ID: ${USER_ID}
+        GROUP_ID: ${GROUP_ID}
     image: edxapp-fonzie
-    environment:
-      SERVICE_VARIANT: lms
-      DJANGO_SETTINGS_MODULE: lms.envs.fun.docker_run_development
+    env_file: .env
     ports:
       - "8072:8000"
     volumes:
+      # Override installed app with the app source directory to provide an
+      # editable environment
+      - ./fonzie:/usr/local/lib/python2.7/dist-packages/fonzie
+      - ./setup.cfg:/edx/app/fonzie/setup.cfg
+      - ./tests:/edx/app/fonzie/tests
       - ./edx-platform/config/lms/docker_run_development.py:/config/lms/docker_run_development.py
-      - ./edx-platform/lms/urls.py:/edx/app/edxapp/edx-platform/lms/urls.py
+      - ./edx-platform/lms/api_urls.py:/edx/app/edxapp/edx-platform/lms/api_urls.py
       - ./edx-platform/reports:/edx/app/edxapp/edx-platform/reports
-      - .:/app/fonzie
       - .pytest_cache:/edx/app/edxapp/edx-platform/.pytest_cache
     tmpfs:
-      - /data/static/lms
-      - /data/media
-      - /data/logs
+      - /data/static:mode=777
+      - /data/media:mode=777
+      - /data/logs:mode=777
     # We use dockerize to wait for the database to be up before running django
     # development server
     command: >
-      dockerize -wait tcp://mysql:3306 -timeout 60s python manage.py lms runserver 0.0.0.0:8000
+      dockerize -wait tcp://mysql:3306 -timeout 60s
+        python manage.py lms runserver 0.0.0.0:8000 --settings=fun.docker_run_development
     depends_on:
+      - mailcatcher
       - mysql
       - mongodb
       - memcached
-      - rabbitmq
 
   # The fonzie service uses the image built for the lms service. We only
   # redefine the working_dir to use the container as a mean to run tests and
@@ -57,8 +66,8 @@ services:
   fonzie:
     image: edxapp-fonzie
     volumes:
-      - .:/app/fonzie
-    working_dir: /app/fonzie
+      - .:/edx/app/fonzie
+    working_dir: /edx/app/fonzie
 
   dredd:
     image: apiaryio/dredd:latest

@@ -52,8 +52,10 @@ Add Fonzie's urls in Open edX LMS's URLs:
 
 .. code-block:: python
 
-    # lms/urls.py
-    urlpatterns = [
+    # lms/fonzie_urls.py
+    from lms.urls import *
+
+    urlpatterns += [
         # [...]
         url(r'^api/', include('fonzie.urls')),
     ]

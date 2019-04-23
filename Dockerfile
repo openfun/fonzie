@@ -1,48 +1,45 @@
-FROM fundocker/edxapp:ginkgo.1-1.0.3-dev
+FROM fundocker/edxapp:hawthorn.1-2.6.0
 
-# Disclaimer:
+ARG USER_ID=1000
+ARG GROUP_ID=1000
+
+# Switch back to a priviledged user to perform base installation
+USER root:root
+
+# Install dockerize to wait for mysql before running the container command
+# (and prevent connection issues)
+ENV DOCKERIZE_VERSION v0.6.1
+RUN python -c "import requests;open('dockerize-linux-amd64.tar.gz', 'wb').write(requests.get('https://github.com/jwilder/dockerize/releases/download/${DOCKERIZE_VERSION}/dockerize-linux-amd64-${DOCKERIZE_VERSION}.tar.gz', allow_redirects=True).content)" && \
+    tar -C /usr/local/bin -xzvf dockerize-linux-amd64.tar.gz && \
+    rm dockerize-linux-amd64.tar.gz
+
+# Add the non-privileged user that will run the application
+RUN groupadd -f --gid ${GROUP_ID} edx && \
+    useradd --uid ${USER_ID} --gid ${GROUP_ID} --home /edx edx
+
+# Allow the edx user to create files in /edx/var (required to perform database
+# migrations)
+RUN mkdir /edx/var && \
+    chown edx:edx /edx/var
+
+# FIXME: as mentionned in fun-platform and edx-platform bug tracker, this
+# webpack-stats.json is required both in production and development in a static
+# directory 😢
 #
-# This image is not intended to be used in production. For now, it has been
-# designed to ease Fonzie's development. In a near future, we will cook a
-# production-ready image and rename this Dockerfile as Dockerfile-dev.
+# Also, the /edx/var tree should be writable by the running user to perform
+# collectstatic and migrations.
+RUN mkdir -p /edx/app/edxapp/staticfiles/studio && \
+    chown -R edx:edx /edx/var && \
+    cp /edx/app/edxapp/edx-platform/common/static/webpack-stats.json /edx/app/edxapp/staticfiles/ && \
+    cp /edx/app/edxapp/edx-platform/common/static/studio/webpack-stats.json /edx/app/edxapp/staticfiles/studio/
 
-# Dependencies
-ENV DOCKERIZE_VERSION v0.6.0
+# Copy the app to the working directory
+COPY --chown=edx:edx . /edx/app/fonzie/
 
-# Get container user and group ids via build arguments
-# Default: 0:0 (root:root)
-ARG user=0
-ARG group=0
+# Install development dependencies and perform a base installation of the app
+RUN cd /edx/app/fonzie/ && \
+    pip install --no-cache-dir -r requirements-dev.txt
 
-# Add a non-privileged user to run the application if given as a build argument
-RUN if [ ${user} -ne 0 -a ${group} -ne 0 ]; then \
-        groupadd --gid $group app ; \
-        useradd --uid $user --gid $group --home /app app ; \
-    fi
-
-# Install dockerize
-RUN curl -L \
-        --output dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
-        https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && \
-    tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && \
-    rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
-
-# Add application sources
-ADD . /app/fonzie/
-
-# Install application and project requirements
-RUN cd /app/fonzie && \
-    pip install --exists-action w -r requirements-dev.txt
-
-# FIXME: pyopenssl seems to be linked with a wrong openssl release leading to
-# bad handskake ssl errors. This looks ugly, but forcing pyopenssl
-# re-installation solves this issue.
-RUN pip install -U pyopenssl
-
-# Run container with the $user:$group user
-#
-# We recommend to build the container with the following build arguments to map
-# container user with the HOST user:
-#
-# docker build --build-arg user=$(id -u) --build-arg group=$(id -g)
-USER $user:$group
+# Switch to an un-privileged user matching the host user to prevent permission
+# issues with volumes (host folders)
+USER ${USER_ID}:${GROUP_ID}

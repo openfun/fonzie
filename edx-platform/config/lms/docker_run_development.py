@@ -4,6 +4,7 @@ from docker_run_production import *
 DEBUG = True
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+SECRET_KEY = "foo"
 
 PIPELINE_ENABLED = False
 STATICFILES_STORAGE = 'openedx.core.storage.DevelopmentStorage'
@@ -26,7 +27,7 @@ INSTALLED_APPS += (
     'fonzie',
 )
 
-ROOT_URLCONF = 'lms.urls'
+ROOT_URLCONF = 'lms.api_urls'
 
 # Django Rest Framework (aka DRF)
 REST_FRAMEWORK = {
