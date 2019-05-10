@@ -59,29 +59,29 @@ load-plugins = caniusepython3.pylint_checker,edx_lint.pylint,pylint_django,pylin
 
 [MESSAGES CONTROL]
 disable =
+	abstract-class-little-used,
+	abstract-class-not-used,
+	bad-builtin,
+	bad-continuation,
+	duplicate-code,
+	fixme,
 	locally-disabled,
 	locally-enabled,
-	too-few-public-methods,
-	bad-builtin,
-	star-args,
-	abstract-class-not-used,
-	abstract-class-little-used,
-	no-init,
-	fixme,
 	logging-format-interpolation,
-	too-many-lines,
+	no-init,
 	no-self-use,
-	too-many-ancestors,
-	too-many-instance-attributes,
+	star-args,
 	too-few-public-methods,
+	too-few-public-methods,
+	too-many-ancestors,
+	too-many-arguments,
+	too-many-branches,
+	too-many-instance-attributes,
+	too-many-lines,
+	too-many-locals,
 	too-many-public-methods,
 	too-many-return-statements,
-	too-many-branches,
-	too-many-arguments,
-	too-many-locals,
-	unused-wildcard-import,
-	duplicate-code,
-	bad-continuation
+	unused-wildcard-import
 
 
 [REPORTS]

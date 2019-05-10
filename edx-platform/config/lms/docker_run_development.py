@@ -26,7 +26,7 @@ INSTALLED_APPS += (
     'fonzie',
 )
 
-ROOT_URLCONF = "lms.api_urls"
+ROOT_URLCONF = "fonzie.urls.lms_root"
 
 # Disable CourseTalk service (student course reviewing)
 COURSE_REVIEWS_TOOL_PROVIDER_FRAGMENT_NAME = None
@@ -53,6 +53,6 @@ GRADES_DOWNLOAD = {
    "STORAGE_CLASS": "django.core.files.storage.FileSystemStorage",
    "STORAGE_KWARGS": {
        "location": "/data/export",
-       "base_url": "/api/v1.0/protected/instructor_files",
+       "base_url": "/api/v1.0/acl/report",
    }
 }

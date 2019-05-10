@@ -7,6 +7,7 @@ from __future__ import absolute_import, unicode_literals
 from django.conf.urls import include, url
 
 from ..apps import FonzieConfig
+from . import acl as acl_urls
 from . import status as status_urls
 
 app_name = FonzieConfig.name
@@ -17,8 +18,12 @@ app_name = FonzieConfig.name
 #
 # TODO: switch to AcceptHeaderVersioning
 # http://www.django-rest-framework.org/api-guide/versioning/#acceptheaderversioning
-API_PREFIX = r'^v(?P<version>[0-9]+\.[0-9]+)'
+API_PREFIX = r"^v(?P<version>[0-9]+\.[0-9]+)"
 
 urlpatterns = [
-    url(r'{}/status/'.format(API_PREFIX), include(status_urls, namespace='status')),
+    url(r"{}/status/".format(API_PREFIX), include(status_urls, namespace="status")),
+    url(
+        r"{}/acl/".format(API_PREFIX),
+        include(acl_urls, namespace="acl"),
+    ),
 ]
