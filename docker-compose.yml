@@ -38,17 +38,15 @@ services:
     volumes:
       # Override installed app with the app source directory to provide an
       # editable environment
-      - ./fonzie:/usr/local/lib/python2.7/dist-packages/fonzie
       - ./setup.cfg:/edx/app/fonzie/setup.cfg
+      - ./fonzie:/edx/app/fonzie/fonzie
       - ./tests:/edx/app/fonzie/tests
+      - ./data:/edx/app/edxapp/data
       - ./edx-platform/config/lms/docker_run_development.py:/config/lms/docker_run_development.py
+      - ./edx-platform/config/lms/docker_run_test.py:/config/lms/docker_run_test.py
       - ./edx-platform/lms/api_urls.py:/edx/app/edxapp/edx-platform/lms/api_urls.py
       - ./edx-platform/reports:/edx/app/edxapp/edx-platform/reports
       - .pytest_cache:/edx/app/edxapp/edx-platform/.pytest_cache
-    tmpfs:
-      - /data/static:mode=777
-      - /data/media:mode=777
-      - /data/logs:mode=777
     # We use dockerize to wait for the database to be up before running django
     # development server
     command: >
@@ -59,6 +57,20 @@ services:
       - mysql
       - mongodb
       - memcached
+
+  cms:
+    image: edxapp-fonzie
+    env_file: .env
+    environment:
+      SERVICE_VARIANT: cms
+      DJANGO_SETTINGS_MODULE: cms.envs.fun.docker_run_development
+    volumes:
+      - ./edx-platform/config/cms/docker_run_development.py:/config/cms/docker_run_development.py
+      - ./data:/edx/app/edxapp/data
+    depends_on:
+      - lms
+    user: ${UID}:${GID}
+
 
   # The fonzie service uses the image built for the lms service. We only
   # redefine the working_dir to use the container as a mean to run tests and
@@ -76,3 +88,14 @@ services:
       - .:/api
     depends_on:
       - lms
+
+  nginx:
+    image: nginx:1.13
+    ports:
+      - "8073:8080"
+    volumes:
+      - ./docker/files/etc/nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./data:/data:ro
+    depends_on:
+      - lms
+      - cms

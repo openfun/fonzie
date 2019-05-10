@@ -1,3 +1,7 @@
+data/
+edx-demo-course/
+tests/__init__.py
+
 *.py[cod]
 __pycache__
 
@@ -33,6 +37,7 @@ pip-log.txt
 .tox
 coverage.xml
 htmlcov/
+edx-platform/reports/cover/
 
 # Translations
 *.mo
