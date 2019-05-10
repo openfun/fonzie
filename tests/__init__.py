@@ -1,3 +1,0 @@
-"""
-Fonzie tests module.
-"""

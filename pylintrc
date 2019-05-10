@@ -80,7 +80,9 @@ disable =
 	too-many-arguments,
 	too-many-locals,
 	unused-wildcard-import,
-	duplicate-code
+	duplicate-code,
+	bad-continuation
+
 
 [REPORTS]
 output-format = text

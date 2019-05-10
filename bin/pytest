@@ -5,6 +5,8 @@ export USER_ID
 declare -r GROUP_ID="$(id -g)"
 export GROUP_ID
 
-docker-compose run --rm lms \
+docker-compose run --rm \
+    -e DJANGO_SETTINGS_MODULE=lms.envs.fun.docker_run_test \
+    lms \
     dockerize -wait tcp://mysql:3306 -timeout 60s \
         pytest -c /edx/app/fonzie/setup.cfg "$@"
