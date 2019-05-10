@@ -44,7 +44,6 @@ services:
       - ./data:/edx/app/edxapp/data
       - ./edx-platform/config/lms/docker_run_development.py:/config/lms/docker_run_development.py
       - ./edx-platform/config/lms/docker_run_test.py:/config/lms/docker_run_test.py
-      - ./edx-platform/lms/api_urls.py:/edx/app/edxapp/edx-platform/lms/api_urls.py
       - ./edx-platform/reports:/edx/app/edxapp/edx-platform/reports
       - .pytest_cache:/edx/app/edxapp/edx-platform/.pytest_cache
     # We use dockerize to wait for the database to be up before running django

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Tests for the `fonzie` models module.
+Tests for the `fonzie` views module.
 """
 
 from __future__ import absolute_import, unicode_literals
@@ -20,19 +20,19 @@ class VersionViewTestCase(APITestCase):
         """Set view url"""
         super(VersionViewTestCase, self).setUp()
 
-        self.url = reverse('fonzie:status:version', kwargs={'version': '1.0'})
+        self.url = reverse("fonzie:status:version", kwargs={"version": "1.0"})
 
     def test_get(self):
         """HTTP/GET returns API version"""
 
-        response = self.client.get(self.url, format='json')
+        response = self.client.get(self.url, format="json")
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertJSONEqual(response.content, {'version': fonzie_version})
+        self.assertJSONEqual(response.content, {"version": fonzie_version})
 
     def test_post(self):
         """HTTP/POST should return a 405"""
 
-        response = self.client.post(self.url, data={}, format='json')
+        response = self.client.post(self.url, data={}, format="json")
 
         self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)

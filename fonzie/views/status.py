@@ -16,5 +16,4 @@ class VersionView(APIView):
     # pylint: disable=redefined-builtin
     def get(self, request, version, format=None):
         """Retrieve API version as a SemVer string"""
-
-        return Response({'version': fonzie_version})
+        return Response({"version": fonzie_version})

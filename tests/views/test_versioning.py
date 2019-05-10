@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Tests for the `fonzie` models module.
+Tests for the `fonzie` views module.
 """
 
 from __future__ import absolute_import, unicode_literals
@@ -20,21 +20,23 @@ class VersioningSchemaTestCase(APITestCase):
         """Set view url"""
         super(VersioningSchemaTestCase, self).setUp()
 
-        self.url = reverse('fonzie:status:version', kwargs={'version': '1.0'})
+        self.url = reverse("fonzie:status:version", kwargs={"version": "1.0"})
 
     def test_url_path_versioning(self):
         """Test allowed API versions in URL Path API versioning"""
 
         # Default API version: 1.0
-        url = reverse('fonzie:status:version', kwargs={'version': '1.0'})
-        self.assertIn('v1.0', url)
-        response = self.client.get(url, format='json')
+        url = reverse("fonzie:status:version", kwargs={"version": "1.0"})
+        self.assertIn("v1.0", url)
+        response = self.client.get(url, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertJSONEqual(response.content, {'version': fonzie_version})
+        self.assertJSONEqual(response.content, {"version": fonzie_version})
 
         # Unimplemented or forbidden API version
-        url = reverse('fonzie:status:version', kwargs={'version': '1.1'})
-        self.assertIn('v1.1', url)
-        response = self.client.get(url, format='json')
+        url = reverse("fonzie:status:version", kwargs={"version": "1.1"})
+        self.assertIn("v1.1", url)
+        response = self.client.get(url, format="json")
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
-        self.assertJSONEqual(response.content, {'detail': "Invalid version in URL path."})
+        self.assertJSONEqual(
+            response.content, {"detail": "Invalid version in URL path."}
+        )

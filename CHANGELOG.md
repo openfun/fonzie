@@ -10,7 +10,8 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
-- Add cms and nginx container and improve development environment
+- Add ACL view to control access to instructor dashboard exported files
+- Add `cms` and `nginx` services to development environment
 - Add a POC using a schema-driven development (using
   `API Blueprint <https://apiblueprint.org/>`\_).
 
