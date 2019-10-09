@@ -12,7 +12,7 @@ from ..views.acl import ReportView
 app_name = FonzieConfig.name
 urlpatterns = [
     url(
-        r"^report/(?P<course_sha1>[a-f0-9]{40})/(?P<filename>[\d\w\-\_\.]+)$",
+        r"^report/(?P<course_sha1>[a-f0-9]{40})/(?P<filename>[\d\w\-\_\.\+\@]+)$",
         ReportView.as_view(),
         name="report",
     )

@@ -29,6 +29,7 @@ class ReportViewTestCase(ModuleStoreTestCase, APITestCase):
         """
         super(ReportViewTestCase, self).setUp()
 
+        # this file format is used for student profiles
         self.filename = "fun_test_00_student_profile_info_2019-04-19-1406.csv"
         self.course = CourseFactory.create(default_store=ModuleStoreEnum.Type.split)
         self.course_staff = UserFactory(
@@ -92,6 +93,39 @@ class ReportViewTestCase(ModuleStoreTestCase, APITestCase):
         self.assertEqual(
             response.get("Content-Disposition"),
             "attachment; filename=%s" % self.filename,
+        )
+
+    def test_user_can_download_problem_response(self):
+        """
+        User fullfils all conditions and downloads a problem response file,
+        he should be redirected to Nginx
+        """
+        # this file format is used by problem responses files
+        filename = (
+            "edX_DemoX_Demo_Course_student_state_from_block-v1_edX+DemoX"
+            "+Demo_Course+type@problem+block@d1b84dcd39b0423d9e288f27f0f7f242_"
+            "2019-10-09-1219.csv"
+        )
+        url = reverse(
+            "fonzie:acl:report",
+            kwargs={
+                "version": "1.0",
+                "course_sha1": self.course_sha1,
+                "filename": filename,
+            },
+        )
+
+        self.client.force_authenticate(self.course_staff)
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        self.assertEqual(
+            response.get("X-Accel-Redirect"),
+            "/restricted/%s/%s" % (self.course_sha1, filename),
+        )
+        self.assertEqual(
+            response.get("Content-Disposition"),
+            "attachment; filename=%s" % filename,
         )
 
     def test_user_has_correct_rights_old_course_id_format(self):

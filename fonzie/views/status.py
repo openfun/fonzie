@@ -4,8 +4,8 @@ API status views
 """
 from __future__ import absolute_import, unicode_literals
 
-from rest_framework.response import Response
-from rest_framework.views import APIView
+from rest_framework.response import Response  # pylint: disable=import-error
+from rest_framework.views import APIView  # pylint: disable=import-error
 
 from fonzie import __version__ as fonzie_version
 

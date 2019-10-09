@@ -9,6 +9,11 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Fixed
+
+- ACL: Support filenames using `@` and `+` (e.g. course problem responses
+  report)
+
 ## [0.2.0] - 2019-05-21
 
 ### Added
