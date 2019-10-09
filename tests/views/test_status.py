@@ -5,8 +5,8 @@ Tests for the `fonzie` views module.
 
 from __future__ import absolute_import, unicode_literals
 
-from rest_framework import status
-from rest_framework.test import APITestCase
+from rest_framework import status  # pylint: disable=import-error
+from rest_framework.test import APITestCase  # pylint: disable=import-error
 
 from django.core.urlresolvers import reverse
 
