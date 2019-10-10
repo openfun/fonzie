@@ -40,7 +40,7 @@ help: ## display this help message
 	@perl -nle'print $& if m{^[a-zA-Z_-]+:.*?## .*$$}' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m  %-25s\033[0m %s\n", $$1, $$2}'
 .PHONY: help
 
-bootstrap: run tree migrate demo-course ## bootstrap the project
+bootstrap: run migrate demo-course ## bootstrap the project
 .PHONY: bootstrap
 
 build: ## build project containers
@@ -97,7 +97,7 @@ report: ## publish test coverage report
 	$(COMPOSE_RUN) -e CODECOV_TOKEN lms codecov --commit=${CIRCLE_SHA1}
 .PHONY: report
 
-run: ## start lms development server and nginx
+run: tree ## start lms development server and nginx
 	$(COMPOSE) up -d nginx
 .PHONY: run
 
