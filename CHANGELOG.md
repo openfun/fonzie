@@ -9,6 +9,11 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Added
+
+- Add an User API endpoint to fisrt generate a JWT for Authentication purpose
+  from Third Party Application
+
 ## [0.2.1] - 2019-10-10
 
 ### Fixed
