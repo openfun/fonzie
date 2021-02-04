@@ -9,6 +9,7 @@ from django.conf.urls import include, url
 from ..apps import FonzieConfig
 from . import acl as acl_urls
 from . import status as status_urls
+from . import user as user_urls
 
 app_name = FonzieConfig.name
 
@@ -26,4 +27,5 @@ urlpatterns = [
         r"{}/acl/".format(API_PREFIX),
         include(acl_urls, namespace="acl"),
     ),
+    url(r"{}/user/".format(API_PREFIX), include(user_urls, namespace="user")),
 ]
