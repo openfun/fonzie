@@ -1,6 +1,5 @@
 data/
 edx-demo-course/
-tests/__init__.py
 
 *.py[cod]
 __pycache__
