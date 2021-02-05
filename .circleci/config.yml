@@ -110,6 +110,9 @@ jobs:
           name: Lint code with pylint (py3k)
           command: pylint --py3k fonzie tests
       - run:
+          name: Lint code with bandit
+          command: bandit -qr fonzie
+      - run:
           name: Lint code with pycodestyle
           command: pycodestyle fonzie tests
       - run:

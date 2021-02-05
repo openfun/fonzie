@@ -37,7 +37,7 @@ class ReportView(APIView):
                 user=request.user, role=CourseStaffRole.ROLE
             )
             for course in courses:
-                hashed_course_id = hashlib.sha1(
+                hashed_course_id = hashlib.sha1(  # nosec
                     six.text_type(course.course_id)
                 ).hexdigest()
                 if hashed_course_id == course_sha1:

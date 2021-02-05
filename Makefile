@@ -84,6 +84,7 @@ migrate: run ## run project migrations
 lint: ## check coding style with pycodestyle and pylint
 lint: \
 	lint-pylint \
+	lint-bandit \
 	lint-pycodestyle \
 	lint-isort \
 	lint-pyroma \
@@ -96,6 +97,10 @@ lint-pylint: ## lint python sources with pylint
 	$(COMPOSE_RUN_FONZIE) pylint --py3k fonzie tests
 .PHONY: lint-pylint
 
+lint-bandit: ## lint python sources with bandit
+	@echo "lint:bandit started…"
+	@$(COMPOSE_RUN_FONZIE) bandit -qr fonzie
+.PHONY: lint-bandit
 
 lint-pycodestyle: ## lint python sources with pycodestyle
 	@echo "lint:pycodestyle started…"
