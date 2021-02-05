@@ -1,16 +1,6 @@
-* fonzie version:
-* Django version:
-* Python version:
-* Operating System:
+<!---
+Thanks for filing an issue 😄 ! Before you submit, please read the following:
 
-### Description
-
-Describe what you were trying to get done.
-Tell us what happened, what went wrong, and what you expected to happen.
-
-### What I Did
-
-```
-Paste the command(s) you ran and the output.
-If there was a crash, please include the traceback here.
-```
+Check the other issue templates if you are trying to submit a bug report, feature request, or question
+Search open/closed issues before submitting since someone might have asked the same thing before!
+-->
