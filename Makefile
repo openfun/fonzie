@@ -81,17 +81,42 @@ migrate: run ## run project migrations
 	$(MANAGE_LMS) migrate
 .PHONY: migrate
 
-quality: ## check coding style with pycodestyle and pylint
-	touch tests/__init__.py
+lint: ## check coding style with pycodestyle and pylint
+lint: \
+	lint-pylint \
+	lint-pycodestyle \
+	lint-isort \
+	lint-pyroma \
+	selfcheck
+.PHONY: lint
+
+lint-pylint: ## lint python sources with pylint
+	@echo "lint:pylint started…"
 	$(COMPOSE_RUN_FONZIE) pylint fonzie tests
 	$(COMPOSE_RUN_FONZIE) pylint --py3k fonzie tests
-	rm tests/__init__.py
+.PHONY: lint-pylint
+
+
+lint-pycodestyle: ## lint python sources with pycodestyle
+	@echo "lint:pycodestyle started…"
 	$(COMPOSE_RUN_FONZIE) pycodestyle fonzie tests
+.PHONY: lint-pycodestyle
+
+lint-pydocstyle: ## lint python sources with pydocstyle
+	@echo "lint:pydocstyle started…"
 	$(COMPOSE_RUN_FONZIE) pydocstyle fonzie tests
+.PHONY: lint-pydocstyle
+
+lint-isort: ## lint python sources with isort
+	@echo "lint:isort started…"
 	$(COMPOSE_RUN_FONZIE) isort --check-only --recursive tests fonzie manage.py setup.py
-	${MAKE} selfcheck
+.PHONY: lint-isort
+
+lint-pyroma: ## lint python sources with pyroma
+	@echo "lint:pyroma started…"
 	$(COMPOSE_RUN_FONZIE) pyroma .
-.PHONY: quality
+.PHONY: lint-pyroma
+
 
 report: ## publish test coverage report
 	$(COMPOSE_RUN) -e CODECOV_TOKEN lms codecov --commit=${CIRCLE_SHA1}
@@ -122,7 +147,7 @@ test-spec: ## run tests on API specification (API blueprint)
 	$(COMPOSE_RUN) dredd
 .PHONY: test-spec
 
-validate: quality test ## run tests and quality checks
+validate: lint test ## run tests and linters
 .PHONY: validate
 
 demo-course: ## import demo course from edX repository
