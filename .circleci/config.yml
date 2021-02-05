@@ -5,6 +5,9 @@ jobs:
   lint-git:
     docker:
       - image: circleci/python:3.7-stretch
+        auth:
+          username: $DOCKER_USER
+          password: $DOCKER_PASS
     working_directory: ~/fun
     steps:
       - checkout
@@ -32,6 +35,9 @@ jobs:
   check-changelog:
     docker:
       - image: circleci/buildpack-deps:stretch-scm
+        auth:
+          username: $DOCKER_USER
+          password: $DOCKER_PASS
     working_directory: ~/fun
     steps:
       - checkout
@@ -44,6 +50,9 @@ jobs:
   lint-changelog:
     docker:
       - image: debian:stretch
+        auth:
+          username: $DOCKER_USER
+          password: $DOCKER_PASS
     working_directory: ~/fun
     steps:
       - checkout
@@ -58,6 +67,9 @@ jobs:
   build-back:
     docker:
       - image: circleci/python:2.7-stretch
+        auth:
+          username: $DOCKER_USER
+          password: $DOCKER_PASS
     working_directory: ~/fun
     steps:
       - checkout
@@ -76,6 +88,9 @@ jobs:
   build-docs:
     docker:
       - image: circleci/python:2.7-stretch
+        auth:
+          username: $DOCKER_USER
+          password: $DOCKER_PASS
     working_directory: ~/fun
     steps:
       - checkout
@@ -94,6 +109,9 @@ jobs:
   lint-back:
     docker:
       - image: circleci/python:2.7-stretch
+        auth:
+          username: $DOCKER_USER
+          password: $DOCKER_PASS
     working_directory: ~/fun
     steps:
       - checkout
@@ -203,6 +221,9 @@ jobs:
   package-back:
     docker:
       - image: circleci/python:2.7-stretch
+        auth:
+          username: $DOCKER_USER
+          password: $DOCKER_PASS
     working_directory: ~/fun
     steps:
       - checkout
@@ -231,6 +252,9 @@ jobs:
   pypi:
     docker:
       - image: circleci/python:2.7-stretch
+        auth:
+          username: $DOCKER_USER
+          password: $DOCKER_PASS
     working_directory: ~/fun
     steps:
       - checkout
