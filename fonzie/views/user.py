@@ -7,12 +7,10 @@ from __future__ import absolute_import, unicode_literals
 
 from datetime import datetime
 
-import jwt
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
-from django.conf import settings
+from rest_framework_simplejwt.tokens import AccessToken
 
 
 class UserSessionView(APIView):
@@ -24,26 +22,19 @@ class UserSessionView(APIView):
     def get(self, request, version, format=None):
         """
         Retrieve logged in user, then generate a JWT with a claim containing its
-        username (unique identifier) and its email. The token's expiration is
-        synchronized with the user session expiration date.
+        username (unique identifier) and its email. The token's expiration can
+        be changed through the setting `ACCESS_TOKEN_LIFETIME` (default 5 minutes).
         """
         user = request.user
         issued_at = datetime.utcnow()
-        expired_at = request.session.get_expiry_date()
-        token = jwt.encode(
-            {
-                "email": user.email,
-                "username": user.username,
-                "exp": expired_at,
-                "iat": issued_at,
-            },
-            getattr(settings, "JWT_PRIVATE_SIGNING_KEY", None),
-            algorithm="HS256",
+        token = AccessToken()
+        token.payload.update(
+            {"email": user.email, "username": user.username, "iat": issued_at},
         )
 
         return Response(
             {
-                "access_token": token,
+                "access_token": str(token),
                 "username": user.username,
             }
         )

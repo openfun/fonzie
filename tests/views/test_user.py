@@ -10,7 +10,6 @@ import jwt
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from django.conf import settings
 from django.core.urlresolvers import reverse
 
 from student.tests.factories import UserFactory
@@ -45,17 +44,16 @@ class UserViewTestCase(APITestCase):
         response = self.client.get(self.url)
         token = jwt.decode(
             response.data["access_token"],
-            getattr(
-                settings,
-                "JWT_PRIVATE_SIGNING_KEY",
-                "ThisIsAnExampleKeyForDevPurposeOnly",
-            ),
-            options={"require": ["exp", "iat", "email", "username"]},
+            "ThisIsAnExampleKeyForDevPurposeOnly",
+            options={
+                "require": ["email", "exp", "iat", "jti", "token_type", "username"]
+            },
         )
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["username"], "fonzie")
         self.assertEqual(token["username"], "fonzie")
         self.assertEqual(token["email"], "arthur_fonzarelli@fun-mooc.fr")
-        self.assertIsInstance(token["iat"], int)
+        self.assertEqual(token["token_type"], "access")
         self.assertIsInstance(token["exp"], int)
+        self.assertIsInstance(token["iat"], int)

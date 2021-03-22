@@ -40,7 +40,12 @@ REST_FRAMEWORK = {
     ],
 }
 
-JWT_PRIVATE_SIGNING_KEY = "ThisIsAnExampleKeyForDevPurposeOnly"
+SIMPLE_JWT = {
+    "ALGORITHM": "HS256",
+    "SIGNING_KEY": "ThisIsAnExampleKeyForDevPurposeOnly",
+    "USER_ID_FIELD": "username",
+    "USER_ID_CLAIM": "username",
+}
 
 FEATURES["ENABLE_DISCUSSION_SERVICE"] = False
 
