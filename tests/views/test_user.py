@@ -12,7 +12,7 @@ from rest_framework.test import APITestCase
 
 from django.core.urlresolvers import reverse
 
-from student.tests.factories import UserFactory
+from student.tests.factories import UserFactory, UserProfileFactory
 
 
 class UserViewTestCase(APITestCase):
@@ -38,7 +38,11 @@ class UserViewTestCase(APITestCase):
         If user is authenticated through Django session, view should return
         a JSON object containing the username and a JWT access token
         """
-        user = UserFactory(username="fonzie", email="arthur_fonzarelli@fun-mooc.fr")
+        user = UserFactory.create(
+            username="fonzie",
+            email="arthur_fonzarelli@fun-mooc.fr",
+        )
+        UserProfileFactory.build(user=user, name="Arthur Fonzarelli")
         self.client.force_authenticate(user=user)
 
         response = self.client.get(self.url)
@@ -53,6 +57,7 @@ class UserViewTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["username"], "fonzie")
         self.assertEqual(token["username"], "fonzie")
+        self.assertEqual(token["full_name"], "Arthur Fonzarelli")
         self.assertEqual(token["email"], "arthur_fonzarelli@fun-mooc.fr")
         self.assertEqual(token["token_type"], "access")
         self.assertIsInstance(token["exp"], int)

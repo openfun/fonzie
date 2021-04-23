@@ -29,7 +29,12 @@ class UserSessionView(APIView):
         issued_at = datetime.utcnow()
         token = AccessToken()
         token.payload.update(
-            {"email": user.email, "username": user.username, "iat": issued_at},
+            {
+                "email": user.email,
+                "full_name": user.profile.name,
+                "iat": issued_at,
+                "username": user.username,
+            },
         )
 
         return Response(
