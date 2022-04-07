@@ -9,9 +9,11 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.3.0] - 2022-04-07
+
 ### Added
 
-- Add an User API endpoint to fisrt generate a JWT for Authentication purpose
+- Add a User API endpoint to first generate a JWT for Authentication purpose
   from Third Party Application
 
 ### Changed
@@ -36,7 +38,8 @@ Versioning](https://semver.org/spec/v2.0.0.html).
   `API Blueprint <https://apiblueprint.org/>`\_).
 
 
-[unreleased]: https://github.com/openfun/fonzie/compare/v0.2.1...master
+[unreleased]: https://github.com/openfun/fonzie/compare/v0.3.0...master
+[0.3.0]: https://github.com/openfun/fonzie/compare/v0.2.1...v0.3.0
 [0.2.1]: https://github.com/openfun/fonzie/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/openfun/fonzie/compare/b31adef...v0.2.0
 
