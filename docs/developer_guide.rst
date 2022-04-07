@@ -47,7 +47,7 @@ well:
 .. code-block:: bash
 
     $ curl http://www.mydomain.com:8080/api/v1.0/status/version
-    {"version":"0.2.1"}
+    {"version":"0.3.0"}
 
 
 Development workflow
