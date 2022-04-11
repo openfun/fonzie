@@ -1,4 +1,4 @@
-FROM fundocker/edxapp:hawthorn.1-2.6.0
+FROM fundocker/edxapp:hawthorn.1-3.3.1
 
 ARG USER_ID=1000
 ARG GROUP_ID=1000
@@ -22,16 +22,9 @@ RUN groupadd -f --gid ${GROUP_ID} edx && \
 RUN mkdir /edx/var && \
     chown edx:edx /edx/var
 
-# FIXME: as mentionned in fun-platform and edx-platform bug tracker, this
-# webpack-stats.json is required both in production and development in a static
-# directory 😢
-#
-# Also, the /edx/var tree should be writable by the running user to perform
+# The /edx/var tree should be writable by the running user to perform
 # collectstatic and migrations.
-RUN mkdir -p /edx/app/edxapp/staticfiles/studio && \
-    chown -R edx:edx /edx/var && \
-    cp /edx/app/edxapp/edx-platform/common/static/webpack-stats.json /edx/app/edxapp/staticfiles/ && \
-    cp /edx/app/edxapp/edx-platform/common/static/studio/webpack-stats.json /edx/app/edxapp/staticfiles/studio/
+RUN chown -R edx:edx /edx/var
 
 # Copy the app to the working directory
 COPY --chown=edx:edx . /edx/app/fonzie/
