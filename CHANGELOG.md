@@ -9,6 +9,10 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Added
+
+- Bind user preference language into the claim of the JWT Token
+
 ## [0.3.0] - 2022-04-07
 
 ### Added
