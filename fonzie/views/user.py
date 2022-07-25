@@ -12,6 +12,9 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import AccessToken
 
+from django.conf import settings
+from django.core.exceptions import ObjectDoesNotExist
+
 
 class UserSessionView(APIView):
     """API endpoint to get the authenticated user information."""
@@ -27,12 +30,17 @@ class UserSessionView(APIView):
         """
         user = request.user
         issued_at = datetime.utcnow()
+        try:
+            language = user.preferences.get(key="pref-lang").value
+        except ObjectDoesNotExist:
+            language = settings.LANGUAGE_CODE
         token = AccessToken()
         token.payload.update(
             {
                 "email": user.email,
                 "full_name": user.profile.name,
                 "iat": issued_at,
+                "language": language,
                 "username": user.username,
             },
         )
