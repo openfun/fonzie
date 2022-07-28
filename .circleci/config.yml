@@ -178,6 +178,9 @@ jobs:
           keys:
             - v1-edxapp-sql-dump
       - run:
+          name: Build Docker image
+          command: make build
+      - run:
           name: Start the test stack
           command: make run
       - run:
