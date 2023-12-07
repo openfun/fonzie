@@ -9,6 +9,11 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Added
+
+- Bind user permissions into the claim of the JWT Token
+  (is_active, is_staff, is_superuser)
+
 ### Fixed
 
 - Return user information in the User API endpoint even
