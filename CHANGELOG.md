@@ -9,6 +9,8 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.5.0] - 2023-12-07
+
 ### Added
 
 - Bind user permissions into the claim of the JWT Token
@@ -54,7 +56,8 @@ Versioning](https://semver.org/spec/v2.0.0.html).
   `API Blueprint <https://apiblueprint.org/>`\_).
 
 
-[unreleased]: https://github.com/openfun/fonzie/compare/v0.4.0...master
+[unreleased]: https://github.com/openfun/fonzie/compare/v0.5.0...master
+[0.5.0]: https://github.com/openfun/fonzie/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/openfun/fonzie/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/openfun/fonzie/compare/v0.2.1...v0.3.0
 [0.2.1]: https://github.com/openfun/fonzie/compare/v0.2.0...v0.2.1
