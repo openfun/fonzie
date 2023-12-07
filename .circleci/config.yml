@@ -4,7 +4,7 @@ jobs:
   # Check that the git history is clean and complies with our expectations
   lint-git:
     docker:
-      - image: circleci/python:3.7-stretch
+      - image: cimg/python:3.7
         auth:
           username: $DOCKER_USER
           password: $DOCKER_PASS
@@ -34,7 +34,7 @@ jobs:
   # Check that the CHANGELOG has been updated in the current branch
   check-changelog:
     docker:
-      - image: circleci/buildpack-deps:stretch-scm
+      - image: cimg/base:2023.12
         auth:
           username: $DOCKER_USER
           password: $DOCKER_PASS
@@ -66,7 +66,7 @@ jobs:
   # Build backend development environment
   build-back:
     docker:
-      - image: circleci/python:2.7-stretch
+      - image: cimg/python:2.7
         auth:
           username: $DOCKER_USER
           password: $DOCKER_PASS
@@ -87,7 +87,7 @@ jobs:
 
   build-docs:
     docker:
-      - image: circleci/python:2.7-stretch
+      - image: cimg/python:2.7
         auth:
           username: $DOCKER_USER
           password: $DOCKER_PASS
@@ -108,7 +108,7 @@ jobs:
 
   lint-back:
     docker:
-      - image: circleci/python:2.7-stretch
+      - image: cimg/python:2.7
         auth:
           username: $DOCKER_USER
           password: $DOCKER_PASS
@@ -223,7 +223,7 @@ jobs:
   # ---- Packaging jobs ----
   package-back:
     docker:
-      - image: circleci/python:2.7-stretch
+      - image: cimg/python:2.7
         auth:
           username: $DOCKER_USER
           password: $DOCKER_PASS
@@ -254,7 +254,7 @@ jobs:
   #     environment variables in CircleCI UI (with your PyPI credentials)
   pypi:
     docker:
-      - image: circleci/python:2.7-stretch
+      - image: cimg/python:2.7
         auth:
           username: $DOCKER_USER
           password: $DOCKER_PASS
