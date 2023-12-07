@@ -2,7 +2,7 @@
 """
 API user views
 """
-
+# pylint: disable=import-error
 from __future__ import absolute_import, unicode_literals
 
 from datetime import datetime
@@ -15,10 +15,13 @@ from rest_framework_simplejwt.tokens import AccessToken
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 
+from openedx.core.lib.api.authentication import SessionAuthenticationAllowInactiveUser
+
 
 class UserSessionView(APIView):
     """API endpoint to get the authenticated user information."""
 
+    authentication_classes = [SessionAuthenticationAllowInactiveUser]
     permission_classes = [IsAuthenticated]
 
     # pylint: disable=redefined-builtin
