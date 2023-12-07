@@ -45,6 +45,9 @@ class UserSessionView(APIView):
                 "iat": issued_at,
                 "language": language,
                 "username": user.username,
+                "is_active": user.is_active,
+                "is_staff": user.is_staff,
+                "is_superuser": user.is_superuser,
             },
         )
 
@@ -52,5 +55,6 @@ class UserSessionView(APIView):
             {
                 "access_token": str(token),
                 "username": user.username,
+                "full_name": user.profile.name,
             }
         )

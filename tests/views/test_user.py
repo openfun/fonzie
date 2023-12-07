@@ -6,6 +6,8 @@ Tests for the `fonzie` user module.
 # pylint: disable=no-member,import-error
 from __future__ import absolute_import, unicode_literals
 
+import random
+
 import jwt
 from rest_framework import status
 from rest_framework.test import APITestCase
@@ -44,6 +46,9 @@ class UserViewTestCase(APITestCase):
         user = UserFactory.create(
             username="fonzie",
             email="arthur_fonzarelli@fun-mooc.fr",
+            is_active=random.choice([True, False]),
+            is_staff=random.choice([True, False]),
+            is_superuser=random.choice([True, False]),
         )
         UserProfileFactory.build(user=user, name="Arthur Fonzarelli")
         self.client.force_authenticate(user=user)
@@ -53,7 +58,18 @@ class UserViewTestCase(APITestCase):
             response.data["access_token"],
             "ThisIsAnExampleKeyForDevPurposeOnly",
             options={
-                "require": ["email", "exp", "iat", "jti", "token_type", "username", "language"]
+                "require": [
+                    "email",
+                    "exp",
+                    "iat",
+                    "jti",
+                    "token_type",
+                    "username",
+                    "language",
+                    "is_active",
+                    "is_staff",
+                    "is_superuser",
+                ]
             },
         )
 
@@ -62,6 +78,9 @@ class UserViewTestCase(APITestCase):
         self.assertEqual(token["username"], "fonzie")
         self.assertEqual(token["full_name"], "Arthur Fonzarelli")
         self.assertEqual(token["email"], "arthur_fonzarelli@fun-mooc.fr")
+        self.assertEqual(token["is_active"], user.is_active)
+        self.assertEqual(token["is_staff"], user.is_staff)
+        self.assertEqual(token["is_superuser"], user.is_superuser)
         # When the user has no language preference, LANGUAGE_CODE should be used
         self.assertEqual(token["language"], 'de')
         self.assertEqual(token["token_type"], "access")
@@ -86,8 +105,18 @@ class UserViewTestCase(APITestCase):
             response.data["access_token"],
             "ThisIsAnExampleKeyForDevPurposeOnly",
             options={
-                "require": ["email", "exp", "iat", "jti", "token_type", "username",
-                            "language"]
+                "require": [
+                    "email",
+                    "exp",
+                    "iat",
+                    "jti",
+                    "token_type",
+                    "username",
+                    "language",
+                    "is_active",
+                    "is_staff",
+                    "is_superuser",
+                ]
             },
         )
 
