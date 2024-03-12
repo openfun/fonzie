@@ -14,8 +14,20 @@ from rest_framework_simplejwt.tokens import AccessToken
 
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
+from django.utils.decorators import method_decorator
 
 from openedx.core.lib.api.authentication import SessionAuthenticationAllowInactiveUser
+
+# Since Hawthorn version, the module `cors_csrf` has been moved from `common.djangoapps`
+# to `openedx.core.djangoapps`. So according to the version of Open edX, we need to
+# import the module from the right place.
+try:
+    # First try to import the module from `openedx.core.djangoapps`
+    from openedx.core.djangoapps.cors_csrf.decorators import ensure_csrf_cookie_cross_domain
+except ImportError:
+    # Otherwise, we are using an older version of Open edX, so we import the module
+    # from `common.djangoapps`
+    from cors_csrf.decorators import ensure_csrf_cookie_cross_domain
 
 
 class UserSessionView(APIView):
@@ -24,6 +36,10 @@ class UserSessionView(APIView):
     authentication_classes = [SessionAuthenticationAllowInactiveUser]
     permission_classes = [IsAuthenticated]
 
+    # To be able to update user profile through route api/user/v1/accounts/:username
+    # we need to provide a valid CSRF Token. This is why we need to ensure that
+    # the CSRF cookie is set for cross domain requests.
+    @method_decorator(ensure_csrf_cookie_cross_domain)
     # pylint: disable=redefined-builtin
     def get(self, request, version, format=None):
         """

@@ -26,6 +26,8 @@ STATICFILES_STORAGE = 'openedx.core.storage.DevelopmentStorage'
 FEATURES['ENABLE_DISCUSSION_SERVICE'] = False
 
 ALLOWED_HOSTS = ["*"]
+CORS_ALLOW_INSECURE = True,
+CORS_ORIGIN_ALLOW_ALL = True,
 
 LOGGING['handlers'].update(
     local={'class': 'logging.NullHandler'},

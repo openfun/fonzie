@@ -9,6 +9,10 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Added
+
+- Set cross domain csrf token on user api get request
+
 ## [0.5.0] - 2023-12-07
 
 ### Added
