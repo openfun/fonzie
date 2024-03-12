@@ -37,11 +37,17 @@ class UserViewTestCase(APITestCase):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-    @override_settings(LANGUAGE_CODE="de")
+    @override_settings(
+        LANGUAGE_CODE="de",
+        FEATURES={'ENABLE_CROSS_DOMAIN_CSRF_COOKIE': True},
+        CROSS_DOMAIN_CSRF_COOKIE_NAME="edx_csrf_token",
+        CROSS_DOMAIN_CSRF_COOKIE_DOMAIN="localhost",
+    )
     def test_user_me_with_logged_in_user(self):
         """
         If user is authenticated through Django session, view should return
-        a JSON object containing the username and a JWT access token
+        a JSON object containing the username and a JWT access token and a cross domain
+        csrf token cookie should be set.
         """
         user = UserFactory.create(
             username="fonzie",
@@ -74,6 +80,9 @@ class UserViewTestCase(APITestCase):
         )
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.csrf_cookie_set, True)
+        self.assertEqual(response.cookies.get('edx_csrf_token').key, 'edx_csrf_token')
+        self.assertEqual(response.cookies.get('edx_csrf_token').get('domain'), 'localhost')
         self.assertEqual(response.data["username"], "fonzie")
         self.assertEqual(token["username"], "fonzie")
         self.assertEqual(token["full_name"], "Arthur Fonzarelli")
