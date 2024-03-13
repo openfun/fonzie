@@ -85,7 +85,7 @@ project <https://httpie.org/>`_) to query the API:
     X-Frame-Options: ALLOW
 
     {
-        "version": "0.4.0"
+        "version": "0.6.0"
     }
 
 
@@ -95,7 +95,7 @@ Alternatively, you can use ``curl``:
 .. code-block:: bash
 
     $ curl http://www.mydomain.com:8080/api/v1.0/status/version
-    {"version":"0.4.0"}
+    {"version":"0.6.0"}
 
 
 The output of this command should be a JSON payload containing the running
