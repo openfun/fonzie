@@ -66,11 +66,19 @@ class UserSessionView(APIView):
                 "is_superuser": user.is_superuser,
             },
         )
-
-        return Response(
+        response = Response(
             {
                 "access_token": str(token),
                 "username": user.username,
                 "full_name": user.profile.name,
             }
         )
+        if "newsletter_subscribed" in request.COOKIES:
+            # delete the cookie, as we only need it once, after registration
+            token.payload["has_subscribed_to_newsletter"] = (
+                request.COOKIES.get("newsletter_subscribed") == "true"
+            )
+            response.delete_cookie("newsletter_subscribed")
+            response.data["access_token"] = str(token)
+
+        return response
