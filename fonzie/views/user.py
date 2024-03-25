@@ -75,7 +75,7 @@ class UserSessionView(APIView):
         )
         if "newsletter_subscribed" in request.COOKIES:
             # delete the cookie, as we only need it once, after registration
-            token.payload["has_subscribed_to_newsletter"] = (
+            token.payload["has_subscribed_to_commercial_newsletter"] = (
                 request.COOKIES.get("newsletter_subscribed") == "true"
             )
             response.delete_cookie("newsletter_subscribed")
